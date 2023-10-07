@@ -1,0 +1,25 @@
+{
+  "name": "co-who",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "shadow:watch": "shadow-cljs watch main",
+    "shadow:release": "shadow-cljs release main",
+    "postcss:build": "cross-env TAILWIND_MODE=build postcss src/css/index.css -o ./out/css/main.css --verbose",
+    "postcss:watch": "cross-env TAILWIND_MODE=watch NODE_OPTIONS=--max-old-space-size=8000 postcss src/css/tailwind.css -o ./resources/public/css/main.css --verbose -w",
+    "postcss:release": "cross-env NODE_ENV=production postcss src/css/tailwind.css -o ./resources/public/css/main.css --verbose",
+    "dev": "run-p -l *:watch",
+    "release": "run-s *:release"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "postcss": "^8.4.31",
+    "postcss-cli": "^10.1.0",
+    "tailwindcss": "^3.3.3",
+    "vite-plugin-minify": "^1.5.2"
+  }
+}
