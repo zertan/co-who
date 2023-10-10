@@ -1,7 +1,9 @@
-(ns mr-who.app
+(ns app
   (:require ["./micro_ns.mjs" :as m]
-            ["./mr-who.mjs" :refer [render]]
-            ["./header.mjs" :as h])
+            ["mr-who/render" :as render]
+            ["mr-who/dom" :as dom]
+            ["./header.mjs" :as h]
+            ["./form.mjs" :as f])
   #_(:require-macros [mr-who.macros :as c]))
 
 (defonce app (atom nil))
@@ -19,7 +21,10 @@
                                :mr-who/mounted-elements []}}})
 
 (render/render-and-meta-things (js/document.getElementById "app")
-                               (h/header-comp)
+                               (dom/div {}
+                                 (h/header-comp)
+                                 (f/form-comp))
+                               
                                #_(m/counter-list-comp app {:counter-list/id "1"})
                                {:app app})
 

@@ -2,9 +2,10 @@
 set -euxo pipefail
 
 files=$(find src/main -type f -iname "*.clj[cs]")
-parallel npx squint compile --output-dir out/js {}  ::: ${files[@]}
-cp mr-who.mjs out/js/src/main/
-#output=$(find src/main -type f -iname "*.mjs")
+parallel npx squint compile --output-dir out/js {} ::: ${files[@]}
+cp ../mr-who/out/mr_who.esm.js  out/js/src/main/mr-who.mjs
+npm run postcss:release
+npx vite build
 
 # while read j
 # do

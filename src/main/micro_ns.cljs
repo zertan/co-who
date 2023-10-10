@@ -1,5 +1,5 @@
 (ns mr-who.micro-ns
-  (:require ["./mr-who.mjs" :refer [dom]]))
+  (:require ["mr-who/dom" :as dom]))
 
 (defn click-factory [app id]
   (fn [e]
@@ -22,13 +22,13 @@
 (defn counter-comp
   #_([app vdom {:keys [id]} & children] (into (counter-comp app vdom id) children))
   ([app {:counter/keys [id]}]
-   (dom/div {}
-     (dom/button {:on-click (click-factory app id)} "click")
-     (dom/div {} "Counter " [:app-cursor [:counter/id id :name]] ": " [:app-cursor [:counter/id id :value]]))))
+   [:div {}
+    [:button {:on-click (click-factory app id)} "click"]
+    [:div {} "Counter " [:app-cursor [:counter/id id :name]] ": " [:app-cursor [:counter/id id :value]]]]))
 
 (defn counter-list-comp
   #_([ident & children] (into (counter-list-comp) children))
   ([app {:counter-list/keys [id]}]
-   (div {}
-        (for [c (get-in @app [:counter-list/id id :counters]) #_[:app-cursor [:counter-list/id id :counters]]]
-          (counter-comp app {:counter/id (second c)})))))
+   [:div {}
+    (for [c (get-in @app [:counter-list/id id :counters]) #_[:app-cursor [:counter-list/id id :counters]]]
+      (counter-comp app {:counter/id (second c)}))]))

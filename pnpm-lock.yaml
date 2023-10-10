@@ -4,6 +4,14 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+dependencies:
+  mr-who:
+    specifier: link:../mr-who
+    version: link:../mr-who
+  squint-cljs:
+    specifier: ^0.2.31
+    version: 0.2.31
+
 devDependencies:
   cross-env:
     specifier: ^7.0.3
@@ -17,6 +25,9 @@ devDependencies:
   tailwindcss:
     specifier: ^3.3.3
     version: 3.3.3
+  vite:
+    specifier: ^4.4.11
+    version: 4.4.11
   vite-plugin-minify:
     specifier: ^1.5.2
     version: 1.5.2(vite@4.4.11)
@@ -1024,6 +1035,11 @@ packages:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /squint-cljs@0.2.31:
+    resolution: {integrity: sha512-sJiBtZLuuvjYru3My6gRYTFLN5Q1ruqhyvPFh3IeemTJupzfwffcPWoZFt5DbGEIWdyrSHOP1RoeXQ6Tynl7+A==}
+    hasBin: true
+    dev: false
 
   /string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
