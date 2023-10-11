@@ -3,10 +3,8 @@
             ["mr-who/render" :as render]))
 
 (defn form-comp []
-  (dom/form
-        {}
-        (dom/div
-            {:class "mb-6"}
+  (dom/form {}
+    (dom/div {:class "mb-6"}
             #_(dom/label
                   {:for "email",
                    :class
@@ -16,9 +14,10 @@
              {:type "email",
               :id "email",
               :class
-              "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500",
+              "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500",
               :placeholder "name@flowbite.com",
-              :required nil}))
+              :required true
+              }))
         (dom/div
             {:class "mb-6"}
             #_(dom/label

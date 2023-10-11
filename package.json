@@ -24,7 +24,9 @@
     "vite-plugin-minify": "^1.5.2"
   },
   "dependencies": {
+    "apexcharts": "^3.43.0",
     "flowbite": "^1.8.1",
+    "flowbite-datepicker": "^1.2.2",
     "mr-who": "link:../mr-who",
     "squint-cljs": "^0.2.31"
   }
