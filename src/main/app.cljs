@@ -2,16 +2,21 @@
   (:require ["./micro_ns.mjs" :as m]
             ["mr-who/render" :as render]
             ["mr-who/dom" :as dom]
+            ["mr-who/utils" :as u]
             ["./header.mjs" :as h]
             ["./form.mjs" :as f]
+            
+            ["./components/evm_chain_menu.mjs" :refer [chain-menu-comp user-menu-comp load-blockie]]
+            ["./evm_client.mjs" :refer [client chains]]
             ["flowbite" :as fb]
-            ["flowbite-datepicker" :refer [Datepicker]]
-            ["apexcharts" :as ApexCharts]
-            ["./blueprint/chart.mjs" :refer [chart-comp]]
+                                        ;["apexcharts" :as ApexCharts]
+                                        ;["./blueprint/chart.mjs" :refer [chart-comp]]
             ["./blueprint/datepicker.mjs" :refer [date-picker-comp]])
   #_(:require-macros [mr-who.macros :as c]))
 
 (defonce app (atom nil))
+
+(println client)
 
 #_(c/defc)
 
@@ -23,36 +28,50 @@
 #_(n-div {}
        (date-picker-comp))
 
-(reset! app {:counter-list/id {"1" {:counters [[:counter/id 1] [:counter/id 2]]}}
+(reset! app {:counter-list/id {"1" {:counters [[:counter/id 1] [:counter/id 2]]
+}}
+             :blockie/id {"1" {:blockie/id 1
+                               :address "0x0"
+                               :mr-who/comp "co-who.blueprint.components/blockie-comp"
+}}
+             :chain-menu/id {"1" {:chain-menu/id "1"
+                                  :blockie [:blockie/id 1]
+}}
              :counter/id {"1" {:counter/id "1"
                                :value 1
                                :name "a"
-                               :mr-who/mounted-elements []}
+}
                           "2" {:counter/id "2"
                                :value 2
                                :name "b"
-                               :mr-who/mounted-elements []}}
-             :chart/id {"1" {:conf {"chart" {"height" "100%" "maxWidth" "100%" "type" "area" "fontFamily" "Inter, sans-serif" "dropShadow" {"enabled" false} "toolbar" {"show" false}} "tooltip" {"enabled" true "x" {"show" false}} "fill" {"type" "gradient" "gradient" {"opacityFrom" 0.55 "opacityTo" 0 "shade" "#1C64F2" "gradientToColors" ["#1C64F2"]}} "dataLabels" {"enabled" false} "stroke" {"width" 6} "grid" {"show" false "strokeDashArray" 4 "padding" {"left" 2 "right" 2 "top" 0}} "series" [{"name" "New users" "data" [6500 6418 6456 6526 6356 6456] "color" "#1A56DB"}] "xaxis" {"categories" ["01 February" "02 February" "03 February" "04 February" "05 February" "06 February" "07 February"] "labels" {"show" false} "axisBorder" {"show" false} "axisTicks" {"show" false}} "yaxis" {"show" false}}
-                             }}})
+}}
+             :mr-who/id {"1" {:mr-who/id 1 :address [:mr-who/id 2]}}})
 
-(render/render-and-meta-things (js/document.getElementById "app")
-                               (dom/div {:class "dark bg-gray-900 w-screen h-screen"}
+(println "dbv: " (u/db-value-at @app [:chain-menu/id 1]))
 
-                                        (h/header-comp)
-                                        (date-picker-comp)
-                                        [:div {:id "dp"
-                                               :class ""}]
-                                        (f/form-comp)
-                                        (chart-comp))
+(println(render/render-and-meta-things (js/document.getElementById "app")
+                                       (dom/div {:class "dark bg-gray-900 w-screen h-screen"}
 
-                               #_(m/counter-list-comp app {:counter-list/id "1"})
-                               {:app app})
+                                         (h/header-comp)
+                                         #_(date-picker-comp)
+                                         (user-menu-comp (u/db-value-at @app [:chain-menu/id 1]))
+                                         
+                                         #_(f/form-comp)
+                                         #_(chart-comp))
 
-(let [e (js/document.getElementById "dp")]
-  (Datepicker. e #js {:dark true
-                      :autohide true}))
+                                       #_(m/counter-list-comp app {:counter-list/id "1"})
+                                       {:app app}))
 
-(let [e (js/document.getElementById "area-chart")
+
+(println @app)
+
+(load-blockie app client)
+
+#_(let [e (js/document.getElementById "dp")]
+    (Datepicker. e  {:dark nil
+                     :autohide true}))
+
+#_(let [e (js/document.getElementById "area-chart")
       a (println "apa: " ApexCharts)
       chart (ApexCharts. e #js (get-in @app [:chart/id 1 :conf]))]
   (.render chart))

@@ -10,9 +10,10 @@ npx vite dev &
 
 while read j
 do
-  j=$(echo ${j} | awk '{print $1}')
-  echo "file changed: ${j} recompiling"
-  
-  npx squint compile "${j}" --output-dir out/js
-  
-done <  <(inotifywait -m -e modify ${files[@]} )
+  if [[ ! -d "${j}" ]]; then    
+    j=$(echo ${j} | awk '{print $1$3}')
+    echo "file changed: ${j} recompiling"
+    
+    npx squint compile "${j}" --output-dir out/js
+  fi  
+done <  <(inotifywait -m -r -e modify src/main )
