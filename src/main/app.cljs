@@ -5,8 +5,8 @@
             ["mr-who/utils" :as u]
             ["./header.mjs" :as h]
             ["./form.mjs" :as f]
-            
-            ["./components/evm_chain_menu.mjs" :refer [chain-menu-comp user-menu-comp load-blockie]]
+            ["./blueprint/blockie.mjs" :refer [blockie-comp]]
+            ["./components/evm_chain_menu.mjs" :as ec :refer [chain-menu-comp user-menu-comp load-blockie]]
             ["./evm_client.mjs" :refer [client chains]]
             ["flowbite" :as fb]
                                         ;["apexcharts" :as ApexCharts]
@@ -16,7 +16,7 @@
 
 (defonce app (atom nil))
 
-(println client)
+#_(println client)
 
 #_(c/defc)
 
@@ -25,10 +25,36 @@
     
     ))
 
-#_(n-div {}
-       (date-picker-comp))
+#_(defn initial-state [comp & children]
+  (if (map? comp)
+    (let [ident (:ident comp)]
+      (if [id (get-in comp [])]
+        (:initial-state comp)
+        (merge (:initial-state comp) {ident (u/random-uuid)} )))
+    (initial-state (first children) (rest children)))
+  )
 
-(reset! app {:counter-list/id {"1" {:counters [[:counter/id 1] [:counter/id 2]]
+
+#_(println "init-state: " (ec/user-menu-2-comp))
+#_(println (dom/div {:a 1}
+           (dom/div {:a 2} )
+           (dom/div {:a 3} )))
+
+#_(println (dom/append-child (js/document.getElementById "app") (dom/div {:class "bg-black w-screen h-screen"})))
+
+(let [root (js/document.getElementById "app")]
+  (dom/append-child root
+                    (dom/re :div {:class "bg-black w-screen h-screen"}
+                            #_(h/header-comp)
+                            (ec/user-menu-2-comp
+                             {:chain-menu/id "1"
+                                        ;:blockie {:address "0x716237123678"}
+                              }))))
+
+#_(n-div {}
+         (date-picker-comp))
+
+#_(reset! app {:counter-list/id {"1" {:counters [[:counter/id 1] [:counter/id 2]]
 }}
              :blockie/id {"1" {:blockie/id 1
                                :address "0x0"
@@ -47,14 +73,15 @@
 }}
              :mr-who/id {"1" {:mr-who/id 1 :address [:mr-who/id 2]}}})
 
-(println "dbv: " (u/db-value-at @app [:chain-menu/id 1]))
+#_(println "dbv: " (u/db-value-at @app [:chain-menu/id 1]))
 
-(println(render/render-and-meta-things (js/document.getElementById "app")
+#_(println(render/render-and-meta-things (js/document.getElementById "app")
                                        (dom/div {:class "dark bg-gray-900 w-screen h-screen"}
 
                                          (h/header-comp)
+                                         (ec/user-menu-2-comp)
                                          #_(date-picker-comp)
-                                         (user-menu-comp (u/db-value-at @app [:chain-menu/id 1]))
+                                         #_(user-menu-comp (u/db-value-at @app [:chain-menu/id 1]))
                                          
                                          #_(f/form-comp)
                                          #_(chart-comp))
@@ -63,9 +90,9 @@
                                        {:app app}))
 
 
-(println @app)
+#_(println @app)
 
-(load-blockie app client)
+#_(load-blockie app client)
 
 #_(let [e (js/document.getElementById "dp")]
     (Datepicker. e  {:dark nil
@@ -79,3 +106,4 @@
 #_(reset! vdom (n/db :mr-who/id (r/render-and-meta-things (js/document.getElementById "app")
                                                           (m/counter-comp app vdom {:counter/id "1"})
                                                           {:app app})))
+

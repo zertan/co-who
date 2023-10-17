@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -euxo pipefail
 trap 'kill 0' EXIT
 
 files=$(find src/main -type f -iname "*.clj[cs]")

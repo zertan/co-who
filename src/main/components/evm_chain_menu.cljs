@@ -4,6 +4,7 @@
             #_["../mutations.mjs" :as m]
             ["mr-who/dom" :as dom]
             ["mr-who/mutations" :as m]
+            ["mr-who/utils" :as u]
             ;["../blueprint/icons/web3" :refer [ethereum polygon optimism arbitrum hardhat]]
             ))
 
@@ -43,3 +44,9 @@
    chain
    (for [c chains]
      (:name c))))
+
+(defn user-menu-2-comp [{:keys [chain-menu/id blockie]
+                         :or {chain-menu/id (u/random-uuid)
+                              blockie (:data (blockie-comp))}}]
+  (dom/div {}
+    (blockie-comp blockie)))
