@@ -6,6 +6,7 @@
             ["./header.mjs" :as h]
             ["./form.mjs" :as f]
             ["./ceramic.mjs" :as c]
+            ["./orbis.mjs"]
             ["./components/evm_chain_menu.mjs" :refer [chain-menu-comp user-menu-comp load-blockie]]
             ["./evm_client.mjs" :refer [client chains]]
             ["flowbite" :as fb]
