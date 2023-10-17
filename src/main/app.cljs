@@ -5,7 +5,7 @@
             ["mr-who/utils" :as u]
             ["./header.mjs" :as h]
             ["./form.mjs" :as f]
-            
+            ["./ceramic.mjs" :as c]
             ["./components/evm_chain_menu.mjs" :refer [chain-menu-comp user-menu-comp load-blockie]]
             ["./evm_client.mjs" :refer [client chains]]
             ["flowbite" :as fb]
@@ -44,23 +44,36 @@
                           "2" {:counter/id "2"
                                :value 2
                                :name "b"
-}}
+                               }}
+             :button-switch/id {"1" {}}
+             :root/id {"1" {:show? true}}
              :mr-who/id {"1" {:mr-who/id 1 :address [:mr-who/id 2]}}})
+
+(defn root-comp [{:keys [root/id]} & children]
+  (into (dom/div {:class "dark bg-gray-900 w-screen h-screen"}) children))
+
+(defn button-switch []
+  (dom/button {:class "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+               :on-click #(swap! app update-in [:root/id "1" :show?] not)} "Toggle visibility"))
 
 (println "dbv: " (u/db-value-at @app [:chain-menu/id 1]))
 
-(println(render/render-and-meta-things (js/document.getElementById "app")
-                                       (dom/div {:class "dark bg-gray-900 w-screen h-screen"}
+(println "app: "(render/render-and-meta-things (js/document.getElementById "app")
+                                               (root-comp {:root/id "1"}
+                                                
+                                                (h/header-comp)
+                                                (button-switch)
+                                                (let [show? (u/db-value-at @app [:root/id "1" :show?])]
+                                                  (when show?
+                                                    (dom/div {}
+                                                      (date-picker-comp)
+                                                      (user-menu-comp (u/db-value-at @app [:chain-menu/id 1])))))
+                                                
+                                                #_(f/form-comp)
+                                                #_(chart-comp))
 
-                                         (h/header-comp)
-                                         #_(date-picker-comp)
-                                         (user-menu-comp (u/db-value-at @app [:chain-menu/id 1]))
-                                         
-                                         #_(f/form-comp)
-                                         #_(chart-comp))
-
-                                       #_(m/counter-list-comp app {:counter-list/id "1"})
-                                       {:app app}))
+                                               #_(m/counter-list-comp app {:counter-list/id "1"})
+                                               {:app app}))
 
 
 (println @app)

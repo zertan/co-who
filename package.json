@@ -16,14 +16,19 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "cross-env": "^7.0.3",
     "postcss": "^8.4.31",
     "postcss-cli": "^10.1.0",
+    "rollup-plugin-node-polyfills": "^0.2.1",
     "tailwindcss": "^3.3.3",
     "vite": "^4.4.11",
     "vite-plugin-minify": "^1.5.2"
   },
   "dependencies": {
+    "@ceramicnetwork/http-client": "^2.33.0",
+    "dids": "^4.0.4",
     "ethereum-blockies-base64": "^1.0.2",
     "flowbite": "^1.8.1",
     "flowbite-datepicker": "^1.2.2",
