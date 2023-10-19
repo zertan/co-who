@@ -19,7 +19,7 @@
             ["./blueprint/datepicker.mjs" :refer [date-picker-comp]])
   #_(:require-macros [mr-who.macros :as c]))
 
-(defonce app (atom nil))
+(defonce app (atom {}))
 
 #_(println client)
 
@@ -46,22 +46,22 @@
 
 #_(println (:data (blockie-comp {:address (:address (eu/account-from-private-key (eu/generate-private-key)))})))
 
-(let [root (js/document.getElementById "app")]
-  (dom/append-child root
-                    (dom/div {:class "bg-black w-screen h-screen dark"}
-                      (h/header-comp)
-                      (dom/div {:class "max-w-screen-xl"}
-                        (timeline-comp [{:event/id (u/random-uuid)
-                                         :blockie (:data (blockie-comp {:address (:address (eu/account-from-private-key (eu/generate-private-key)))}))}
-                                        {:event/id (u/random-uuid)
-                                         :blockie (:data (blockie-comp {:address (:address (eu/account-from-private-key (eu/generate-private-key)))}))}])
-                        (pagination 5)
-                        (date-picker-comp)
-                        (popover-comp)
-                        (ec/user-menu-2-comp
-                         {:chain-menu/id "1"
-                          :blockie {:address "0x716237123678"}
-                          })))))
+(dom/append-child (js/document.getElementById "app")
+                  (dom/div {:class "bg-black w-screen h-screen dark"}
+                    (h/header-comp)
+                    (dom/div {:class "max-w-screen-xl"}
+                      (timeline-comp [{:event/id (u/random-uuid)
+                                       :blockie (:data (blockie-comp {:address (:address (eu/account-from-private-key (eu/generate-private-key)))}))}
+                                      {:event/id (u/random-uuid)
+                                       :blockie (:data (blockie-comp {:address (:address (eu/account-from-private-key (eu/generate-private-key)))}))}])
+                      (pagination 5)
+                      (date-picker-comp)
+                      (popover-comp)
+                      (ec/chain-menu-comp client chains (:chain client))
+                      (ec/user-menu-2-comp app client
+                                           {:chain-menu/id "1"
+                                            :blockie {:address (:account client)}
+                                            }))))
 
 #_(n-div {}
          (date-picker-comp))

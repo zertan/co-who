@@ -24,7 +24,7 @@
     "vite-plugin-minify": "^1.5.2"
   },
   "dependencies": {
-    "ethereum-blockies-base64": "^1.0.2",
+    "blockies-ts": "^1.0.0",
     "flowbite": "^1.8.1",
     "flowbite-datepicker": "^1.2.2",
     "mr-who": "link:../mr-who",
