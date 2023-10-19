@@ -1,13 +1,18 @@
 (ns app
-  (:require ["./micro_ns.mjs" :as m]
+  (:require #_["./micro_ns.mjs" :as m]
             ["mr-who/render" :as render]
             ["mr-who/dom" :as dom]
             ["mr-who/utils" :as u]
-            ["./header.mjs" :as h]
+            ["./layout/header.mjs" :as h]
             ["./form.mjs" :as f]
+            ["./blueprint/popover.mjs" :refer [popover-comp]]
             ["./blueprint/blockie.mjs" :refer [blockie-comp]]
+            ["./blueprint/timeline.mjs" :refer [timeline-comp]]
+            ["./blueprint/search.mjs" :refer [search-comp]]
+            ["./blueprint/pagination.mjs" :refer [pagination]]
             ["./components/evm_chain_menu.mjs" :as ec :refer [chain-menu-comp user-menu-comp load-blockie]]
             ["./evm_client.mjs" :refer [client chains]]
+            ["./evm_util.mjs" :as eu]
             ["flowbite" :as fb]
                                         ;["apexcharts" :as ApexCharts]
                                         ;["./blueprint/chart.mjs" :refer [chart-comp]]
@@ -36,20 +41,27 @@
 
 
 #_(println "init-state: " (ec/user-menu-2-comp))
-#_(println (dom/div {:a 1}
-           (dom/div {:a 2} )
-           (dom/div {:a 3} )))
 
 #_(println (dom/append-child (js/document.getElementById "app") (dom/div {:class "bg-black w-screen h-screen"})))
 
+#_(println (:data (blockie-comp {:address (:address (eu/account-from-private-key (eu/generate-private-key)))})))
+
 (let [root (js/document.getElementById "app")]
   (dom/append-child root
-                    (dom/re :div {:class "bg-black w-screen h-screen"}
-                            #_(h/header-comp)
-                            (ec/user-menu-2-comp
-                             {:chain-menu/id "1"
-                                        ;:blockie {:address "0x716237123678"}
-                              }))))
+                    (dom/div {:class "bg-black w-screen h-screen dark"}
+                      (h/header-comp)
+                      (dom/div {:class "max-w-screen-xl"}
+                        (timeline-comp [{:event/id (u/random-uuid)
+                                         :blockie (:data (blockie-comp {:address (:address (eu/account-from-private-key (eu/generate-private-key)))}))}
+                                        {:event/id (u/random-uuid)
+                                         :blockie (:data (blockie-comp {:address (:address (eu/account-from-private-key (eu/generate-private-key)))}))}])
+                        (pagination 5)
+                        (date-picker-comp)
+                        (popover-comp)
+                        (ec/user-menu-2-comp
+                         {:chain-menu/id "1"
+                          :blockie {:address "0x716237123678"}
+                          })))))
 
 #_(n-div {}
          (date-picker-comp))
@@ -106,4 +118,5 @@
 #_(reset! vdom (n/db :mr-who/id (r/render-and-meta-things (js/document.getElementById "app")
                                                           (m/counter-comp app vdom {:counter/id "1"})
                                                           {:app app})))
+
 

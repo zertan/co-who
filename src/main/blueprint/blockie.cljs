@@ -3,8 +3,16 @@
             ["mr-who/utils" :as u]
             ["ethereum-blockies-base64" :as makeBlockie]))
 
+(defn simple-blockie [address]
+  (makeBlockie address))
+
 (defn blockie-comp [{:keys [blockie/id address]
                      :or {blockie/id (u/random-uuid)
                           address "0x0"}}]
-  (img {:class "w-10 h-10 rounded"
-        :src (makeBlockie address)}))
+  (let [node (dom/img {:src (makeBlockie address)})
+        node-id (u/random-uuid)
+        data {:blockie/id id
+              :address address
+              :mr-who/mounted-elements [{:mr-who/id {node-id node}}]}]
+    {:render node
+     :data data}))

@@ -49,4 +49,4 @@
                          :or {chain-menu/id (u/random-uuid)
                               blockie (:data (blockie-comp))}}]
   (dom/div {}
-    (blockie-comp blockie)))
+    (:render (blockie-comp blockie))))
