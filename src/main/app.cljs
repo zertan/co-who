@@ -61,10 +61,13 @@
 (defn inc-mutation [app path]
   (fn [e]
     (let [replace-element (get-in @app (conj path :node))
-          value (js/parseInt (get-in @app (conj path :children :value :children)))
-          render ((second (counter-comp {:value (+ value 1)})))]
-      (println replace-element)
-      (println "v " value)
+          value (js/parseInt (get-in @app (conj path :children)))
+          ;render ((second (counter-comp {:value (+ value 1)})))
+          render {:node (js/document.createTextNode (inc value))
+                  :children (inc value)}
+          ]
+      #_(println replace-element)
+      #_(println "v " value)
       (dom/replace-node replace-element (:node render))
       (swap! app assoc-in path render)
       (println @app)
@@ -109,7 +112,7 @@
 
 #_(println (let [a (assoc {} [:sad 1] 1)] a #_(get ":sad,1" a)))
 
-(reset! app (let [rc {:root ((second (root-comp app {:counter ((first (counter-comp {:on-click (inc-mutation app [:root :children :counter])})))})))}]
+(reset! app (let [rc {:root ((second (root-comp app {:counter ((first (counter-comp {:on-click (inc-mutation app [:root :children :counter :children :value])})))})))}]
               (dom/append-helper (js/document.getElementById "app") (:node (:root rc)))
               rc))
 
