@@ -11,9 +11,9 @@
                      :or {blockie/id (u/random-uuid)
                           address "0x0"}}]
   (let [node (dom/img {:src (make-blockie address)})
-        node-id (u/random-uuid)
+        node-id "asd-2";(u/random-uuid)
         data {:blockie/id id
               :address address
-              :mr-who/mounted-elements [{:mr-who/id {node-id node}}]}]
+              :mr-who/mounted-elements [{:mr-who/id (assoc {} node-id node)}]}]
     {:render node
      :data data}))

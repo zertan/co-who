@@ -19,9 +19,109 @@
             ["./blueprint/datepicker.mjs" :refer [date-picker-comp]])
   #_(:require-macros [mr-who.macros :as c]))
 
-(defonce app (atom {}))
+(defonce app (atom {:simple []
+                    :mr-who/mounted-elements [:mr-who/id :root]
+                    :mr-who/id {:root (js/document.getElementById "app")}}))
 
-#_(println client)
+
+(defn merge-comp [app comp path]
+  (let [render ((second comp))
+        replace-element-ident (get-in @app (conj path :mr-who/mounted-elements))]
+    (println "render: " render)
+    #_(println "me:" (conj path :mr-who/mounted-elements))
+    #_(println replace-element-ident)
+    #_(println "me2: " (get-in @app replace-element-ident))
+    (dom/append-helper (get-in @app replace-element-ident) (:node (first (u/vals render))))
+    #_(println "data:" (first comp))
+    (let [data (first comp)
+          render-id (u/random-uuid)
+          element render
+          ]
+      #_(println "new: " (conj data
+                             {:mr-who/mounted-elements [[:mr-who/id render-id]]}
+                             {:mr-who/id (assoc (assoc {} (second replace-element-ident) element)
+                                                render-id render)}))
+      #_(swap! app merge (conj data
+                             {:mr-who/mounted-elements [[:mr-who/id render-id]]}
+                             {:mr-who/id (assoc (assoc {} (second replace-element-ident) element)
+                                                render-id render)}))
+      #_(println @app)
+      [((first comp)) render])))
+
+
+(defn counter-comp [{:keys [value on-click] :or {value 0
+                                                 on-click (fn [e] (println "toc"))}}]
+  (list
+   (fn [] {:value value
+           :on-click on-click})
+   (fn [] (dom/div {}
+            {:nil (dom/button {:on-click on-click} "inc ")}
+            {:value (dom/text {} (str value))}))))
+
+(defn inc-mutation [app path]
+  (fn [e]
+    (let [replace-element (get-in @app (conj path :node))
+          value (js/parseInt (get-in @app (conj path :children :value :children)))
+          render ((second (counter-comp {:value (+ value 1)})))]
+      (println replace-element)
+      (println "v " value)
+      (dom/replace-node replace-element (:node render))
+      (swap! app assoc-in path render)
+      (println @app)
+      )
+    )
+  )
+
+(defn simple-comp [{:simple/keys [id text] :or {id (u/random-uuid)
+                                                text "Simple comp mounted with default data."}}]
+  (list (fn [] {:simple/id id
+                :simple/text text})
+        (fn [] (dom/div {}
+                 {:nil (dom/div {}
+                         {:nil (dom/div {} "ddddddasd")})}
+                 {:simple/text (dom/div {:class "text-white"} text)}))))
+
+(defn funny-mutation [e]
+  (let [path [:root :children :simple-0]
+        render ((second (simple-comp {:simple/text "If you can see me, I am mounted a second time, new data."})))
+        replace-element (get-in @app (conj path :node))]
+    (println "re: " replace-element)
+    (dom/replace-node replace-element (:node render))
+    (swap! app assoc-in path render)
+    (println @app)))
+
+
+(defn root-comp [app {:keys [simple counter] :or {simple ((first (simple-comp {})))
+                                                  counter ((first (counter-comp {})))}}]
+  (list (fn [] {:simple simple
+                :counter counter})
+        (fn [] (dom/div {:class "bg-black w-screen h-screen text-white dark"}
+                 {:nil (dom/div {:class "text-white"} "dsadsd")}
+                 
+                 {:nil (dom/div {:class "text-white"}
+                         {:nil (dom/span {} "dsadsd-a")})}
+                 {:nil (dom/button {:on-click funny-mutation} "Replace")}
+                 (doall (for [i (range 2)]
+                          (assoc {} (str "simple-" i) ((second (simple-comp simple))))))
+                 {:counter ((second (counter-comp counter)))}
+                 {:nil (dom/div {:class "tet-white"}
+                         (str @app))}))))
+
+#_(println (let [a (assoc {} [:sad 1] 1)] a #_(get ":sad,1" a)))
+
+(reset! app (let [rc {:root ((second (root-comp app {:counter ((first (counter-comp {:on-click (inc-mutation app [:root :children :counter])})))})))}]
+              (dom/append-helper (js/document.getElementById "app") (:node (:root rc)))
+              rc))
+
+(println "app: " @app)
+
+#_(let [rc (root-comp {})]
+    ((second rc)))
+
+
+#_(merge-comp app (simple-comp {:simple/text "If you can see me, I am mounted a second time, new data."}) [:simple])
+
+#_(println "sp: " (let [a (lazy-seq 1 2)] (nth a 0)))
 
 #_(c/defc)
 
@@ -44,10 +144,15 @@
 
 #_(println (dom/append-child (js/document.getElementById "app") (dom/div {:class "bg-black w-screen h-screen"})))
 
-#_(println (:data (blockie-comp {:address (:address (eu/account-from-private-key (eu/generate-private-key)))})))
+#_(println "m: " (-> (js/Map.) (.set "a" 2)))
+#_(println (let [aasd "a"] (u/zipmap [aasd "b"] [1 2])))
 
-(dom/append-child (js/document.getElementById "app")
-                  (dom/div {:class "bg-black w-screen h-screen dark"}
+#_(let [b (:data (blockie-comp {:blockie/id "asd"
+                              :address (:address (eu/account-from-private-key (eu/generate-private-key)))}))]
+  (println "blockie: " (get-in b [:mr-who/mounted-elements 0 :mr-who/id :asd-2] )))
+
+#_(dom/append-child (js/document.getElementById "app")
+                  #_(dom/div {:class "bg-black w-screen h-screen dark"}
                     (h/header-comp)
                     (dom/div {:class "max-w-screen-xl"}
                       (timeline-comp [{:event/id (u/random-uuid)
