@@ -1,8 +1,5 @@
 (ns routing
-  (:require ["navigo" :as navigo]
-            ["mr-who/dom" :as dom]
-            ["mr-who/utils" :as u]
-            ["mr-who/render" :as render]))
+  (:require ["navigo" :as navigo]))
 
 (def router (new navigo.default "/"))
 

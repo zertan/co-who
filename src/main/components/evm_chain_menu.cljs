@@ -23,7 +23,7 @@
 
 ;(get-address client)
 
-(defn user-menu-comp [{:keys [chain-menu/id blockie]}]
+#_(defn user-menu-comp [{:keys [chain-menu/id blockie]}]
   (dropdown-comp
    (blockie-comp blockie #_(get-in @app [:chain-menu/id "1" :address]))
    (for [e ["My Projects"]]
@@ -37,15 +37,14 @@
 (defn connect-event [app client]
   (.then (eu/request-addresses client)
          (fn [r]
-           (println client)
            (swap! app assoc-in [:user/id "1" :address] (first r)))))
 
 (defn connect-button [app client]
   (button "Connect" #(connect-event app client)))
 
-(defn user-menu-2-comp [app client {:keys [chain-menu/id blockie]
-                                :or {chain-menu/id (u/random-uuid)
-                                     blockie (:data (blockie-comp))}}]
+#_(defn user-menu-2-comp [id client blockie app {:keys [chain-menu/id ]
+                                 :or {chain-menu/id (u/random-uuid)
+                                      blockie (:data (blockie-comp))}}]
   (if (:account client)
     (dom/div {}
       (:render (blockie-comp blockie)))

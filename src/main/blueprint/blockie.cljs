@@ -10,7 +10,8 @@
 (defn blockie-comp [{:keys [blockie/id address]
                      :or {blockie/id (u/random-uuid)
                           address "0x0"}}]
-  (let [node (dom/img {:src (make-blockie address)})
+  (let [node (dom/img {:id id
+                       :src (make-blockie address)})
         node-id "asd-2";(u/random-uuid)
         data {:blockie/id id
               :address address
