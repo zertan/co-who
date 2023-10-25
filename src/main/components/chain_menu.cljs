@@ -1,9 +1,8 @@
-(ns co-who.components.evm-chain-manu
+(ns co-who.components.chain-manu
   (:require ["../blueprint/dropdown.mjs" :refer [dropdown-comp]]
             ["../blueprint/blockie.mjs" :refer [blockie-comp]]
             ["../blueprint/button.mjs" :refer [button]]
-            ["../evm_util.mjs" :as eu]
-            #_["../mutations.mjs" :as m]
+            ["../evm/util.mjs" :as eu]
             ["mr-who/dom" :as dom]
             ["mr-who/mutations" :as m]
             ["mr-who/utils" :as u]

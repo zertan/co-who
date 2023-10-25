@@ -3,11 +3,10 @@
             ["mr-who/dom" :as dom]))
 
 (defn replace-mutation [app path comp]
-  (fn [e]
-    (let [render (first (u/vals (comp)))
-          replace-element (get-in @app (conj path :node))]
-      (dom/replace-node replace-element (:node render))
-      (swap! app assoc-in path render))))
+  (let [render (first (u/vals (comp)))
+        replace-element (get-in @app (conj path :node))]
+    (dom/replace-node replace-element (:node render))
+    (swap! app assoc-in path render)))
 
 #_(defn merge-comp [app comp comp-data path]
     (let [new-comp (comp/init-state comp)]

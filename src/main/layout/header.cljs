@@ -3,13 +3,12 @@
             ["../utils.mjs" :as u]
             ["../blueprint/search.mjs" :refer [search-comp]]
             ["../components/user.mjs" :refer [user-comp]]
-            ["../evm_client.mjs" :refer [client chains]]
-            ["../evm_util.mjs" :as eu]
-            ["../components/evm_chain_menu.mjs" :refer [chain-menu-comp]]))
+            ["../evm/client.mjs" :refer [client chains]]
+            ["../components/chain_menu.mjs" :refer [chain-menu-comp]]))
 
-(defn list-comp [item]
+(defn list-comp [item href]
   (dom/li {}
-    (dom/a {:href "#"
+    (dom/a {:href href :data-navigo nil
             :class "block py-2 pr-4 pl-3 text-white rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white"
             :aria-current "page"}
       item)))
@@ -75,5 +74,5 @@
                                      :id "mobile-menu-2"}
                             (dom/ul {:class "flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0"}
                               (doall
-                               (for [t [ "Team" "Company"]]
-                                 (list-comp t)))))))))))
+                               (for [t [ ["/" "/"] ["Activity" "/activity"]]]
+                                 (list-comp (first t) (second t))))))))))))
