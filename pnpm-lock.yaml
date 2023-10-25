@@ -17,6 +17,9 @@ dependencies:
   mr-who:
     specifier: link:../mr-who
     version: link:../mr-who
+  navigo:
+    specifier: ^8.11.1
+    version: 8.11.1
   squint-cljs:
     specifier: ^0.2.31
     version: 0.2.31
@@ -843,6 +846,10 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
     dev: true
+
+  /navigo@8.11.1:
+    resolution: {integrity: sha512-e3sc1UzakF+bWquC8/dbPCgo7LgPEW1ekgwb4pmEcl8tOc/I7lML8r7HBql+b0VRk7tJWTZqtkeObwJAVR1pxg==}
+    dev: false
 
   /no-case@3.0.4:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}

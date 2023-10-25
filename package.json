@@ -28,6 +28,7 @@
     "flowbite": "^1.8.1",
     "flowbite-datepicker": "^1.2.2",
     "mr-who": "link:../mr-who",
+    "navigo": "^8.11.1",
     "squint-cljs": "^0.2.31",
     "viem": "^1.16.5"
   }

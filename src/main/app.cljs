@@ -3,6 +3,7 @@
             ["mr-who/render" :as render]
             ["mr-who/dom" :as dom]
             ["mr-who/utils" :as u]
+            ["./routing.mjs" :as r]
             ["./layout/header.mjs" :as h]
             ["./form.mjs" :as f]
             ["./blueprint/popover.mjs" :refer [popover-comp]]
@@ -48,73 +49,98 @@
       #_(println @app)
       [((first comp)) render])))
 
+(defn add-route [app path route-path comp]
+  (r/add-route r/router route-path
+               #(let [render (comp)
+                      replace-element (get-in @app (conj path :node))]
+                  (dom/replace-node replace-element (:node (first (u/vals render))))
+                  (swap! app assoc-in path (conj (first (u/vals render)))))))
+
+(defn router-comp [{:keys [active-path path-children] :or {active-path "/"
+                                                           path-children [{:path "/"
+                                                                           :comp (fn [] (dom/div {:id :route} "Active path: /"))}
+                                                                          {:path "/babaei"
+                                                                           :comp (fn [] (dom/div {:id :route} "Active path: /babaei"))}]}}]
+  (list (fn [] {:active-path active-path
+                :path-children path-children})
+        (fn [] (dom/div {:id :router}
+                 (dom/div {:href "/" :data-navigo nil} "/ ")
+                 (dom/div {:href "/babaei" :data-navigo nil} "babaei")
+                 ((:comp
+                   (first
+                    (filterv #(= active-path (:path %)) path-children))))))))
 
 (defn counter-comp [{:keys [value on-click] :or {value 0
                                                  on-click (fn [e] (println "toc"))}}]
   (list
    (fn [] {:value value
            :on-click on-click})
-   (fn [] (dom/div {}
-            {:nil (dom/button {:on-click on-click} "inc ")}
-            {:value (dom/text {} (str value))}))))
+   (fn [] (dom/div {:id :counter}
+            (dom/button  {:on-click on-click} "inc ")
+            (dom/text  {:id :value} (str value))))))
 
 (defn inc-mutation [app path]
   (fn [e]
     (let [replace-element (get-in @app (conj path :node))
-          value (js/parseInt (get-in @app (conj path :children)))
-          ;render ((second (counter-comp {:value (+ value 1)})))
-          render {:node (js/document.createTextNode (inc value))
-                  :children (inc value)}
-          ]
-      #_(println replace-element)
-      #_(println "v " value)
+          value (js/parseInt (first (get-in @app path)))
+          render (merge {:node (js/document.createTextNode (inc value))}
+                        [(inc value)])]
       (dom/replace-node replace-element (:node render))
-      (swap! app assoc-in path render)
-      (println @app)
-      )
-    )
-  )
+      (swap! app assoc-in path render))))
 
 (defn simple-comp [{:simple/keys [id text] :or {id (u/random-uuid)
                                                 text "Simple comp mounted with default data."}}]
   (list (fn [] {:simple/id id
                 :simple/text text})
-        (fn [] (dom/div {}
-                 {:nil (dom/div {}
-                         {:nil (dom/div {} "ddddddasd")})}
-                 {:simple/text (dom/div {:class "text-white"} text)}))))
+        (fn [] (dom/div {:id (str "simple-id-" id)}
+                 (dom/div {:id :simple-text
+                           :class "text-white"} text)))))
 
-(defn funny-mutation [e]
-  (let [path [:root :children :simple-0]
-        render ((second (simple-comp {:simple/text "If you can see me, I am mounted a second time, new data."})))
-        replace-element (get-in @app (conj path :node))]
-    (println "re: " replace-element)
-    (dom/replace-node replace-element (:node render))
-    (swap! app assoc-in path render)
-    (println @app)))
+(defn replace-mutation [path comp]
+  (fn [e]
+    (let [render (first (u/vals (comp)))
+          replace-element (get-in @app (conj path :node))]
+      (dom/replace-node replace-element (:node render))
+      (swap! app assoc-in path render))))
 
-
-(defn root-comp [app {:keys [simple counter] :or {simple ((first (simple-comp {})))
-                                                  counter ((first (counter-comp {})))}}]
-  (list (fn [] {:simple simple
+(defn root-comp [app {:keys [simples counter router] :or {simples (mapv #((first (simple-comp {:simple/id %}))) [1 2])
+                                                         counter ((first (counter-comp {})))
+                                                         router nil #_((first (router-comp {})))}}]
+  (list (fn [] {:simples simples
                 :counter counter})
-        (fn [] (dom/div {:class "bg-black w-screen h-screen text-white dark"}
-                 {:nil (dom/div {:class "text-white"} "dsadsd")}
+        (fn [] (dom/div {:id :root
+                         :class "bg-black w-screen h-screen text-white dark"}
+                 (h/header-comp)
+                 (dom/div {:class "text-white"} "dsadsd")
                  
-                 {:nil (dom/div {:class "text-white"}
-                         {:nil (dom/span {} "dsadsd-a")})}
-                 {:nil (dom/button {:on-click funny-mutation} "Replace")}
-                 (doall (for [i (range 2)]
-                          (assoc {} (str "simple-" i) ((second (simple-comp simple))))))
-                 {:counter ((second (counter-comp counter)))}
-                 {:nil (dom/div {:class "tet-white"}
-                         (str @app))}))))
+                 (dom/div {:id :dsa
+                                  :class "text-white"}
+                          (dom/div {:id "asd"} "dsadsd-a"))
+                 (dom/button {:on-click (replace-mutation [:root :simple-id-1]
+                                                          (second (simple-comp {:simple/id 1
+                                                                                :simple/text "If you can see me, I am mounted a second time, new data."})))} "Replace")
+                 (doall (for [simple simples]
+                          ((second (simple-comp simple)))))
+                 ((second (counter-comp counter)))
+                 ((second (router-comp router)))))))
 
 #_(println (let [a (assoc {} [:sad 1] 1)] a #_(get ":sad,1" a)))
 
-(reset! app (let [rc {:root ((second (root-comp app {:counter ((first (counter-comp {:on-click (inc-mutation app [:root :children :counter :children :value])})))})))}]
+(reset! app (let [rc ((second (root-comp app {:router ((first (router-comp {:active-path "/"
+                                                                            :path-children [(let [comp (fn [] (dom/div {:id :route} "Active path: /"))]
+                                                                                              {:path "/"
+                                                                                               :listener (add-route app [:root :router :route] "/" comp)
+                                                                                               :comp comp})
+                                                                                            (let [comp (fn [] (dom/div {:id :route} "Active path: /babaei"))]
+                                                                                              {:path "/babaei"
+                                                                                               :listener (add-route app [:root :router :route] "/babaei" comp)
+                                                                                               :comp comp})]})))
+                                              :counter ((first (counter-comp {:on-click (inc-mutation app
+                                                                                                      [:root :counter :value])})))})))]
               (dom/append-helper (js/document.getElementById "app") (:node (:root rc)))
               rc))
+
+  (r/router.resolve)
 
 (println "app: " @app)
 
