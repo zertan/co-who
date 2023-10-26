@@ -17,17 +17,18 @@
   (swap! app conj (let [root-comp ((second (main/root-comp app {:router ((first (rc/router-comp {:active-path "/"
                                                                                                  :path-children [(let [comp (second (l/landing-comp))]
                                                                                                                    {:path "/"
-                                                                                                                    :listener (rc/add-route app [:root :router :route] "/" comp)
+                                                                                                                    :listener (rc/add-route app [:root :router :route] "/" comp [:landing])
                                                                                                                     :comp comp})
                                                                                                                  (let [comp (second (a/activity-comp))]
-                                                                                                                   {:path "/babaei"
-                                                                                                                    :listener (rc/add-route app [:root :router :route] "/activity" comp)
+                                                                                                                   {:path "/activity"
+                                                                                                                    :listener (rc/add-route app [:root :router :route] "/activity" comp [:activity])
                                                                                                                     :comp comp})]})))})))]
                     (dom/append-helper (js/document.getElementById "app") (:node (:root root-comp)))
                     root-comp))
   
   (r/router.resolve)
   (set! (.-app js/window) app)
-  (.then (eu/get-address client) #(m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address %})))))
+  (eu/add-accounts-changed js/window.ethereum #(m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address %})) [:user 0]))
+  (.then (eu/get-address client) #(m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address %})) [:user 0])))
 
 (init)

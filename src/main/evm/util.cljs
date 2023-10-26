@@ -18,3 +18,8 @@
   (.then (.get client)
          #(first %)))
 
+(defn add-listener [ethereum event handler]
+  (.. ethereum (on event handler)))
+
+(defn add-accounts-changed [ethereum f]
+  (add-listener ethereum "accountsChanged" f))

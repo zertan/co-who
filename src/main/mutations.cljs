@@ -2,11 +2,14 @@
   (:require ["mr-who/utils" :as u]
             ["mr-who/dom" :as dom]))
 
-(defn replace-mutation [app path comp]
-  (let [render (first (u/vals (comp)))
+(defn replace-mutation [app path comp ident]
+  (let [cache (get-in @app (conj ident :cache))
+        render (if-not (u/undefined? cache) cache (first (u/vals (comp))))
         replace-element (get-in @app (conj path :node))]
     (dom/replace-node replace-element (:node render))
-    (swap! app assoc-in path render)))
+    (swap! app assoc-in path render)
+    (when (u/undefined? cache)
+      (swap! app assoc-in (conj ident :cache) render))))
 
 #_(defn merge-comp [app comp comp-data path]
     (let [new-comp (comp/init-state comp)]
