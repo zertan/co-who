@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "shadow:watch": "shadow-cljs watch main",
     "shadow:release": "shadow-cljs release main",
@@ -17,19 +18,19 @@
   "license": "ISC",
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "postcss": "^8.4.31",
+    "postcss": "^8.4.35",
     "postcss-cli": "^10.1.0",
-    "tailwindcss": "^3.3.3",
-    "vite": "^4.4.11",
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.1.4",
     "vite-plugin-minify": "^1.5.2"
   },
   "dependencies": {
     "blockies-ts": "^1.0.0",
-    "flowbite": "^1.8.1",
-    "flowbite-datepicker": "^1.2.2",
+    "flowbite": "^2.3.0",
+    "flowbite-datepicker": "^1.2.6",
     "mr-who": "link:../mr-who",
     "navigo": "^8.11.1",
-    "squint-cljs": "^0.2.31",
-    "viem": "^1.16.5"
+    "squint-cljs": "^0.6.94",
+    "viem": "^2.7.13"
   }
 }
