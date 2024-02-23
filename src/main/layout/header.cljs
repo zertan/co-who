@@ -47,7 +47,7 @@
                                    "text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"}
                                   "Log in")
                             ((second (user-comp user)))
-                            (icon-button {} academic-cap modal-open-fn)
+                            (icon-button {:data-modal-target "wizard-modal" :data-modal-show "wizard-modal"} academic-cap (fn [])#_modal-open-fn)
                             (dom/button 
                                 {:data-collapse-toggle "mobile-menu-2",
                                  :type "button",

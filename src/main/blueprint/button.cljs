@@ -9,6 +9,5 @@
 (defn icon-button [attr-map icon on-click]
   (dom/button (merge {:class "absolute top-1.5 right-0.5 text-gray-400 bg-transparent
                       hover:text-gray-900 rounded-lg text-sm p-1.5
-                      ml-auto inline-flex items-center dark:hover:text-white"
-                  :on-click on-click} attr-map)
+                      ml-auto inline-flex items-center dark:hover:text-white"} attr-map)
     (dom/div {:class "w-6 h-6"} icon)))

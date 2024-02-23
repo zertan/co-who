@@ -12,11 +12,12 @@
             ["./pages/activity.mjs" :as a]
             ["./pages/landing.mjs" :as l]
             ["./pages/profile.mjs" :as p]
-            #_["flowbite" :as fb]))
+            ["flowbite" :as fb]))
 
 (defonce app (atom {}))
 
 (defn init []
+  (fb/initFlowbite)
   (swap! app conj (let [root-comp ((second (main/root-comp app {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:remove ["hidden"]})})))
                                                                 :wizard-modal ((first (wm/modal-comp {:close-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:add ["hidden"]})})))
                                                                 :router ((first (rc/router-comp {:active-path "/"
