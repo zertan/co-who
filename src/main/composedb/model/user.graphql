@@ -1,0 +1,11 @@
+type User @createModel(accountRelation: SINGLE, description: "A category to group other categories and/or requirements, tasks.") {
+  firstName: String
+  lastName: String
+  introduction: String
+  image: [Aarweave]
+  #id: ID!
+  #parentID: StreamID @documentReference(model: "Category")
+  mainReviewer: DID @accountReference
+  #child: Category
+  #categories: [Category1] @list(maxLength: 200) #@relationFrom(model: "Category", property: "parentID")
+}

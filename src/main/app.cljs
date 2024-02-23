@@ -16,6 +16,8 @@
             ["./components/wizards/project/main.mjs" :as wzp]
             ["./components/wizards/project/info.mjs" :as info-step]
             ["./components/wizards/project/contract_step.mjs" :as contract-step]
+            ["./graphql/client.mjs" :as g]
+            #_["./composedb/client.mjs" :as cdb]
             ["flowbite" :as fb]))
 
 (defonce app (atom {}))
@@ -88,3 +90,12 @@
                            (m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0]))))
 
 (init)
+
+#_(let [query ["query {
+                simpleProfile {
+                  displayname
+               }
+             }"]]
+  (cdb/run-query cdb/client query))
+
+
