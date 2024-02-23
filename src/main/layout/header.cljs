@@ -74,5 +74,5 @@
                                      :id "mobile-menu-2"}
                             (dom/ul {:class "flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0"}
                               (doall
-                               (for [t [ ["/" "/"] ["Activity" "/activity"]]]
+                               (for [t [ ["/" "/"] ["Activity" "/activity"] ["Profile" "/profile"]]]
                                  (list-comp (first t) (second t))))))))))))

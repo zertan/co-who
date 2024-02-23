@@ -7,12 +7,12 @@
 (defn account-from-private-key [key]
   (privateKeyToAccount key))
 
-(defn ^:async request-addresses  [client]
-  (js-await (.requestAddresses client)))
+(defn ^:async request-addresses  [client f]
+  (.then (.requestAddresses client) f))
 
-(defn ^:async get-address [client]
+(defn ^:async get-address [client f]
   (.then (.getAddresses client)
-         #(first %)))
+         f))
 
 (defn get-chain [client]
   (.then (.get client)
