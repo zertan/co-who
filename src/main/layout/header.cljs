@@ -2,6 +2,8 @@
   (:require ["mr-who/dom" :as dom]
             ["../utils.mjs" :as u]
             ["../blueprint/search.mjs" :refer [search-comp]]
+            ["../blueprint/icons/academic-cap.mjs" :refer [academic-cap]]
+            ["../blueprint/button.mjs" :refer [icon-button]]
             ["../components/user.mjs" :refer [user-comp]]
             ["../evm/client.mjs" :refer [client chains]]
             ["../components/chain_menu.mjs" :refer [chain-menu-comp]]))
@@ -13,12 +15,14 @@
             :aria-current "page"}
       item)))
 
-(defn header-comp [{:keys [id logo user] :or {id :header
-                                              logo (str u/img-url "/images/codo_new_white.svg")
-                                              user ((first (user-comp {:address "0x0"})))}}]
+(defn header-comp [{:keys [id logo user modal-open-fn] :or {id :header
+                                                            logo (str u/img-url "/images/codo_new_white.svg")
+                                                            user ((first (user-comp {:address "0x0"})))
+                                                            modal-open-fn #(println %)}}]
   (list (fn [] {:id id
                 :logo logo
-                :user user})
+                :user user
+                :modal-open-fn modal-open-fn})
         (fn []
           (dom/header {:id id}
                       (dom/nav {:id :n
@@ -43,6 +47,7 @@
                                    "text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"}
                                   "Log in")
                             ((second (user-comp user)))
+                            (icon-button {} academic-cap modal-open-fn)
                             (dom/button 
                                 {:data-collapse-toggle "mobile-menu-2",
                                  :type "button",

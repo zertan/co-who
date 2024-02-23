@@ -1,6 +1,5 @@
 (ns form
-  (:require ["mr-who/dom" :as dom]
-            ["mr-who/render" :as render]))
+  (:require ["mr-who/dom" :as dom]))
 
 (defn form-comp []
   (dom/form {}

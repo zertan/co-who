@@ -28,6 +28,7 @@
     "blockies-ts": "^1.0.0",
     "flowbite": "^2.3.0",
     "flowbite-datepicker": "^1.2.6",
+    "heroicons": "^2.1.1",
     "mr-who": "link:../mr-who",
     "navigo": "^8.11.1",
     "squint-cljs": "^0.6.94",

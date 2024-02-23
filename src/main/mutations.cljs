@@ -1,6 +1,8 @@
 (ns co-who.mutations
   (:require ["mr-who/utils" :as u]
-            ["mr-who/dom" :as dom]))
+            ["mr-who/dom" :as dom]
+            [clojure.set :as set]
+            [clojure.string :as string]))
 
 (defn replace-mutation [app path comp ident]
   (let [cache (get-in @app (conj ident :cache))
@@ -9,7 +11,32 @@
     (dom/replace-node replace-element (:node render))
     (swap! app assoc-in path render)
     (when (u/undefined? cache)
-      (swap! app assoc-in (conj ident :cache) render))))
+      (swap! app assoc-in (conj ident :cache) render))
+    (js/console.log @app)))
+
+#_(defn merge-replace-style-mutation [app path new-style]
+  (let [replace-element (get-in @app (conj path :node))
+        element-attr (.. replace-element (getAttribute "style"))
+        ]
+    (println replace-element)
+    #_(dom/attr-helper replace-element attr-map)))
+
+(defn replace-classes-mutation [app path add-remove-classes]
+  (let [replace-element (get-in @app (conj path :node))
+        ;; css-string (.. replace-element (getAttribute "class"))
+        ;; css-classes (into #{}
+        ;;                   (if (u/string? css-string)
+        ;;                     (string/split css-string #"\s+")))
+        
+        ;; css-classes (if-let [r (:remove add-remove-classes)]
+        ;;               (set/difference css-classes r)
+        ;;               css-classes)
+        ;; css-classes (if-let [a (:add add-remove-classes)]
+        ;;               (set/union css-classes a)
+        ;;               css-classes)
+        ]
+    (dom/remove-css-from-element replace-element (:remove add-remove-classes))
+    (dom/add-css-to-element replace-element (:add add-remove-classes))))
 
 #_(defn merge-comp [app comp comp-data path]
     (let [new-comp (comp/init-state comp)]

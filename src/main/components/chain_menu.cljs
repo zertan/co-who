@@ -3,9 +3,7 @@
             ["../blueprint/blockie.mjs" :refer [blockie-comp]]
             ["../blueprint/button.mjs" :refer [button]]
             ["../evm/util.mjs" :as eu]
-            ["mr-who/dom" :as dom]
             ["mr-who/mutations" :as m]
-            ["mr-who/utils" :as u]
             ;["../blueprint/icons/web3" :refer [ethereum polygon optimism arbitrum hardhat]]
             ))
 

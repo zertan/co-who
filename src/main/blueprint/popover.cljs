@@ -1,4 +1,4 @@
-(ns co-who.blueprint.blockie
+(ns co-who.blueprint.popover
   (:require ["mr-who/dom" :as dom :refer [img]]
             ["mr-who/utils" :as u]))
 
