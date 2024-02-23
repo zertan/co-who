@@ -9,6 +9,7 @@
             ["./evm/util.mjs" :as eu]
             ["./pages/activity.mjs" :as a]
             ["./pages/landing.mjs" :as l]
+            ["./pages/profile.mjs" :as p]
             ["flowbite" :as fb]))
 
 (defonce app (atom {}))

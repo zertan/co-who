@@ -2,6 +2,7 @@
   (:require ["mr-who/dom" :as dom]
             ["mr-who/utils" :as u]
             ["../pages/activity.mjs" :as a]
+            ["../pages/profile.mjs" :as f]
             ["../pages/landing.mjs" :as l]
             ["../routing.mjs" :as r]
             ["../mutations.mjs" :as m]))
@@ -19,11 +20,14 @@
                                                            path-children [{:path "/"
                                                                            :comp (second (l/landing-comp))}
                                                                           {:path "/activity"
-                                                                           :comp (second (a/activity-comp))}]}}]
+                                                                           :comp (second (a/activity-comp))}
+                                                                          {:path "/form"
+                                                                           :comp (second (f/profile-comp))}]}}]
   (list (fn [] {:active-path active-path
                 :path-children path-children})
         (fn [] (dom/div {:id :router}
-                 (dom/div {:id :route}
+                 (dom/div {:id :route
+                           :class "max-w-screen-xl mt-4"}
                    ((:comp
                      (first
                       (filterv #(= active-path (:path %)) path-children)))))))))
