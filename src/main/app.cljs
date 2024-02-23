@@ -10,6 +10,8 @@
             ["./pages/activity.mjs" :as a]
             ["./pages/landing.mjs" :as l]
             ["./pages/profile.mjs" :as p]
+            ["./graphql/client.mjs" :as g]
+            #_["./composedb/client.mjs" :as cdb]
             ["flowbite" :as fb]))
 
 (defonce app (atom {}))
@@ -23,13 +25,32 @@
                                                                                                                  (let [comp (second (a/activity-comp))]
                                                                                                                    {:path "/activity"
                                                                                                                     :listener (rc/add-route app [:root :router :route] "/activity" comp [:activity])
+                                                                                                                    :comp comp})
+                                                                                                                 (let [comp (second (p/profile-comp))]
+                                                                                                                   {:path "/profile"
+                                                                                                                    :listener (rc/add-route app [:root :router :route] "/profile" comp [:profile])
                                                                                                                     :comp comp})]})))})))]
                     (dom/append-helper (js/document.getElementById "app") (:node (:root root-comp)))
                     root-comp))
   
   (r/router.resolve)
   (set! (.-app js/window) app)
-  (eu/add-accounts-changed js/window.ethereum #(m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address %})) [:user 0]))
-  (.then (eu/get-address client) #(m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address %})) [:user 0])))
+  (eu/add-accounts-changed js/window.ethereum
+                           #(let[address (first %)
+                                 a(println address )]
+                              (m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0])))
+  (eu/request-addresses client
+                        #(let[address (first %)
+                                 a(println address )]
+                              (m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0]))))
 
 (init)
+
+#_(let [query ["query {
+                simpleProfile {
+                  displayname
+               }
+             }"]]
+  (cdb/run-query cdb/client query))
+
+

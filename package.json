@@ -24,7 +24,10 @@
     "vite-plugin-minify": "^1.5.2"
   },
   "dependencies": {
+    "@composedb/client": "^0.5.2",
+    "@didtools/pkh-ethereum": "^0.4.1",
     "blockies-ts": "^1.0.0",
+    "did-session": "^2.1.1",
     "flowbite": "^1.8.1",
     "flowbite-datepicker": "^1.2.2",
     "mr-who": "link:../mr-who",
