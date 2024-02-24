@@ -4,7 +4,8 @@
             ["blockies-ts" :as blockies]
             #_["heroicons/20/solid/x-mark" :as x-mark]
             ["./button.mjs" :refer [icon-button]]
-            ["./icons/x-mark.mjs" :refer [x-mark]]))
+            #_["./icons/x-mark.mjs" :refer [x-mark]]
+            ["co-blue/icons" :refer [x-mark]]))
 
 (defn modal [id on-close hidden? & children]
   (div {:id id
