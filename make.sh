@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
+export NODE_ENV=production
+
 files=$(find src/main -type f -iname "*.clj[cs]")
 parallel npx squint compile --output-dir out/js {} ::: ${files[@]}
 #cp ../mr-who/out/mr_who.esm.js  out/js/src/main/mr-who.mjs

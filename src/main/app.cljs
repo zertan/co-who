@@ -11,6 +11,7 @@
             ["./evm/util.mjs" :as eu]
             ["./pages/activity.mjs" :as a]
             ["./pages/landing.mjs" :as l]
+            ["./blueprint/datepicker.mjs" :as dp]
             ["./pages/profile.mjs" :as p]
             ["flowbite" :as fb]))
 
@@ -46,3 +47,8 @@
                            (m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0]))))
 
 (init)
+
+
+(let [node (-> js/document
+               (.getElementById "dp"))]
+  (dp/init-datepicker node))
