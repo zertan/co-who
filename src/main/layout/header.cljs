@@ -27,7 +27,7 @@
           (dom/header {:id id}
                       (dom/nav {:id :n
                                 :class "border-gray-200 text-gray-900 py-2
-                                bg-[#f3f4f6] dark:bg-[#101014]
+                                bg-[#f3f4f6] dark:bg-[#101014] select-none
                                 dark:border-gray-800 dark:text-gray-400"} 
                         (dom/div {:id :n2
                                   :class "flex flex-wrap justify-between items-center mx-auto max-w-screen-xl"}
