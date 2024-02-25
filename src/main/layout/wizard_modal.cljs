@@ -14,7 +14,8 @@
                   :on-close close-fn
                   :hidden? hidden?}
                  (dom/div {:class "flex flex-wrap items-center justify-center text-gray-900 dark:text-white"}
-                   (c/card {:heading "Create Project"}
+                   (c/card {:href "/wizards/new-project"
+                            :heading "Create Project"}
                            (dom/div {:class "w-20 h-20"} academic-cap))
                    (c/card {:heading "Get verified"}
                            (dom/div {:class "w-20 h-20"} academic-cap))

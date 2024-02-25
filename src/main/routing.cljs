@@ -1,7 +1,7 @@
 (ns routing
   (:require ["navigo" :as navigo]))
 
-(def router (new navigo.default "/"))
+(def router (new navigo.default "/" true))
 
 (defn navigate [r path]
   (r.navigate path))

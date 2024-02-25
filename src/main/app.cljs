@@ -13,6 +13,7 @@
             ["./pages/landing.mjs" :as l]
             ["./blueprint/datepicker.mjs" :as dp]
             ["./pages/profile.mjs" :as p]
+            ["./components/wizards/project.mjs" :as wzp]
             ["flowbite" :as fb]))
 
 (defonce app (atom {}))
@@ -21,18 +22,50 @@
   (fb/initFlowbite)
   (swap! app conj (let [root-comp ((second (main/root-comp app {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:remove ["hidden"]})})))
                                                                 :wizard-modal ((first (wm/modal-comp {:close-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:add ["hidden"]})})))
-                                                                :router ((first (rc/router-comp {:active-path "/"
-                                                                                                 :path-children [(let [comp (second (l/landing-comp))]
-                                                                                                                   {:path "/"
-                                                                                                                    :listener (rc/add-route app [:root :router :route] "/" comp [:landing])
+                                                                :router ((first (rc/router-comp {:id :router
+                                                                                                 :route-id :route
+                                                                                                 :active-path "/"
+                                                                                                 :path-children [(let [comp (second (l/landing-comp))
+                                                                                                                       path "/"]
+                                                                                                                   {:path path
+                                                                                                                    :listener (rc/add-route app [:root :router :route] path comp [:landing])
                                                                                                                     :comp comp})
-                                                                                                                 (let [comp (second (a/activity-comp))]
-                                                                                                                   {:path "/activity"
-                                                                                                                    :listener (rc/add-route app [:root :router :route] "/activity" comp [:activity])
+                                                                                                                 (let [comp (second (a/activity-comp))
+                                                                                                                       path "/activity"]
+                                                                                                                   {:path path
+                                                                                                                    :listener (rc/add-route app [:root :router :route] path comp [:activity])
                                                                                                                     :comp comp})
-                                                                                                                 (let [comp (second (p/profile-comp))]
-                                                                                                                   {:path "/profile"
-                                                                                                                    :listener (rc/add-route app [:root :router :route] "/profile" comp [:profile])
+                                                                                                                 (let [comp (second (p/profile-comp))
+                                                                                                                       path "/profile"]
+                                                                                                                   {:path path
+                                                                                                                    :listener (rc/add-route app [:root :router :route] path comp [:profile])
+                                                                                                                    :comp comp})
+                                                                                                                 (let [comp (second (wzp/project-wizard-comp {:step :info
+                                                                                                                                                              :wizard-router {:id :wizard-router
+                                                                                                                                                                              :route-id :wizard-route
+                                                                                                                                                                              :active-path "/info"
+                                                                                                                                                                              :path-children [(let [comp (second ())
+                                                                                                                                                                                                    path "/info"]
+                                                                                                                                                                                                {:path path
+                                                                                                                                                                                                 :listener (rc/add-route app [:root :router :route :wizard-router :wizard-route] path comp [:new-project])
+                                                                                                                                                                                                 :comp comp})
+                                                                                                                                                                                              ]}
+                                                                                                                                                              :stepper {:id "stepper"
+                                                                                                                                                                       :steps [{:id :info
+                                                                                                                                                                                :heading "Project Information"
+                                                                                                                                                                                :details "Enter basic project information."
+                                                                                                                                                                                :completed? false
+                                                                                                                                                                                :active? true
+                                                                                                                                                                                :icon :clipboard-document-list}
+                                                                                                                                                                               {:id :contract
+                                                                                                                                                                                :heading "Deploy Contract"
+                                                                                                                                                                                :details "Deploy the Project to the Blockchain."
+                                                                                                                                                                                :completed? false
+                                                                                                                                                                                :active? false
+                                                                                                                                                                                :icon :cube}]}}))
+                                                                                                                       path "/wizards/new-project"]
+                                                                                                                   {:path path
+                                                                                                                    :listener (rc/add-route app [:root :router :route] path comp [:new-project])
                                                                                                                     :comp comp})]})))})))]
                     (dom/append-helper (js/document.getElementById "app") (:node (:root root-comp)))
                     root-comp))
