@@ -1,8 +1,6 @@
 (ns co-who.mutations
   (:require ["mr-who/utils" :as u]
-            ["mr-who/dom" :as dom]
-            [clojure.set :as set]
-            [clojure.string :as string]))
+            ["mr-who/dom" :as dom]))
 
 (defn replace-mutation [app path comp ident]
   (let [cache (get-in @app (conj ident :cache))
@@ -14,12 +12,24 @@
       (swap! app assoc-in (conj ident :cache) render))
     (js/console.log @app)))
 
+(defn replace-children-mutation [app path comp ident]
+  (let [cache (get-in @app (conj ident :cache))
+        render (if-not (u/undefined? cache) cache (first (u/vals (comp))))
+        node (get-in @app (conj path :node))]
+    (mapv #(node.removeChild %) node.children)
+    (dom/append-child node (:node render))
+    (swap! app assoc-in path render)
+    (when (u/undefined? cache)
+      (swap! app assoc-in (conj ident :cache) render))
+    (js/console.log @app)))
+
+
 #_(defn merge-replace-style-mutation [app path new-style]
-  (let [replace-element (get-in @app (conj path :node))
-        element-attr (.. replace-element (getAttribute "style"))
-        ]
-    (println replace-element)
-    #_(dom/attr-helper replace-element attr-map)))
+    (let [replace-element (get-in @app (conj path :node))
+          element-attr (.. replace-element (getAttribute "style"))
+          ]
+      (println replace-element)
+      #_(dom/attr-helper replace-element attr-map)))
 
 (defn replace-classes-mutation [app path add-remove-classes]
   (let [replace-element (get-in @app (conj path :node))

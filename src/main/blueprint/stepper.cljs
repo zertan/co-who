@@ -1,5 +1,5 @@
 (ns co-who.blueprint.stepper
-    (:require ["mr-who/dom" :as dom :refer [div p button li ol span h3]]
+    (:require ["mr-who/dom" :as dom :refer [div p button li ol span h3 a]]
               ["co-blue/icons" :as i :refer [check clipboard-document-list cube]]))
 
 (def icon-map {:check check
@@ -8,11 +8,11 @@
 
 #_(def ui-icon (comp/computed-factory Icon))
 
-(defn step-comp [{:keys [id heading details icon completed? active? on-click] :or {id "step-x"
-                                                                                   heading "Step" details "Step description"
-                                                                                   icon :check completed? false
-                                                                                   active? false
-                                                                                   on-click (fn [e])}}]
+(defn step-comp [{:keys [id heading details icon completed? active? on-click href] :or {id "step-x"
+                                                                                        heading "Step" details "Step description"
+                                                                                        icon :check completed? false
+                                                                                        active? false href "#"
+                                                                                        on-click (fn [e])}}]
   (li {:id id
        :class "mb-10 ml-6"}
     (if completed?
@@ -28,8 +28,11 @@
                        "w-5 h-5 text-black dark:text-white"
                        "w-5 h-5 text-gray-500 dark:text-gray-400")}
           (get icon-map icon))))
-    (div {:class "hover:cursor-pointer"
-          :on-click on-click}
+    (a {:class "hover:cursor-pointer"
+        :href href
+        :data-navigo nil
+        :draggable "false"
+        :on-click on-click}
       (h3 {:class (if active?
                     "font-medium leading-tight text-black dark:text-white"
                     "font-medium leading-tight")} heading)

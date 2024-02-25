@@ -13,7 +13,9 @@
             ["./pages/landing.mjs" :as l]
             ["./blueprint/datepicker.mjs" :as dp]
             ["./pages/profile.mjs" :as p]
-            ["./components/wizards/project.mjs" :as wzp]
+            ["./components/wizards/project/main.mjs" :as wzp]
+            ["./components/wizards/project/info.mjs" :as info-step]
+            ["./components/wizards/project/contract_step.mjs" :as contract-step]
             ["flowbite" :as fb]))
 
 (defonce app (atom {}))
@@ -24,7 +26,7 @@
                                                                 :wizard-modal ((first (wm/modal-comp {:close-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:add ["hidden"]})})))
                                                                 :router ((first (rc/router-comp {:id :router
                                                                                                  :route-id :route
-                                                                                                 :active-path "/"
+                                                                                                 :active-path "/wizards/new-project"
                                                                                                  :path-children [(let [comp (second (l/landing-comp))
                                                                                                                        path "/"]
                                                                                                                    {:path path
@@ -43,25 +45,31 @@
                                                                                                                  (let [comp (second (wzp/project-wizard-comp {:step :info
                                                                                                                                                               :wizard-router {:id :wizard-router
                                                                                                                                                                               :route-id :wizard-route
-                                                                                                                                                                              :active-path "/info"
-                                                                                                                                                                              :path-children [(let [comp (second ())
-                                                                                                                                                                                                    path "/info"]
+                                                                                                                                                                              :active-path "/wizards/new-project/info"
+                                                                                                                                                                              :path-children [(let [comp (second (info-step/form-comp))
+                                                                                                                                                                                                    path "/wizards/new-project/info"]
                                                                                                                                                                                                 {:path path
-                                                                                                                                                                                                 :listener (rc/add-route app [:root :router :route :wizard-router :wizard-route] path comp [:new-project])
+                                                                                                                                                                                                 :listener (rc/add-route app [:root :router :route  :new-project :wzr :wizard-router :wizard-route] path comp [:new-project-info])
                                                                                                                                                                                                  :comp comp})
-                                                                                                                                                                                              ]}
+                                                                                                                                                                                              (let [comp (second (contract-step/contract-step))
+                                                                                                                                                                                                    path "/wizards/new-project/contract"]
+                                                                                                                                                                                                {:path path
+                                                                                                                                                                                                 :listener (rc/add-route app [:root :router :route :new-project :wzr :wizard-router :wizard-route] path comp [:new-project-contract])
+                                                                                                                                                                                                 :comp comp})]}
                                                                                                                                                               :stepper {:id "stepper"
                                                                                                                                                                        :steps [{:id :info
                                                                                                                                                                                 :heading "Project Information"
                                                                                                                                                                                 :details "Enter basic project information."
                                                                                                                                                                                 :completed? false
                                                                                                                                                                                 :active? true
+                                                                                                                                                                                :href "/wizards/new-project/info"
                                                                                                                                                                                 :icon :clipboard-document-list}
                                                                                                                                                                                {:id :contract
                                                                                                                                                                                 :heading "Deploy Contract"
                                                                                                                                                                                 :details "Deploy the Project to the Blockchain."
                                                                                                                                                                                 :completed? false
                                                                                                                                                                                 :active? false
+                                                                                                                                                                                :href "/wizards/new-project/contract"
                                                                                                                                                                                 :icon :cube}]}}))
                                                                                                                        path "/wizards/new-project"]
                                                                                                                    {:path path

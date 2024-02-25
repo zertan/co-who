@@ -1,7 +1,7 @@
-(ns co-who.components.wizards.project
+(ns co-who.components.wizards.project.main
   (:require ["mr-who/dom" :as dom :refer [div p button]]
             ["../../../layout/router.mjs" :as rc]
-            ["../../blueprint/stepper.mjs" :refer [stepper-comp]]))
+            ["../../../blueprint/stepper.mjs" :refer [stepper-comp]]))
 
 (defn project-wizard-comp [{:keys [step stepper wizard-router] :or {step :info
                                                                     wizard-router {}
@@ -11,28 +11,30 @@
                                                                                       :details "Enter basic project information."
                                                                                       :completed? false
                                                                                       :active? true
+                                                                                      :href "/wizards/new-project/info"
                                                                                       :icon :clipboard-document-list}
                                                                                      {:id :contract
                                                                                       :heading "Deploy Contract"
                                                                                       :details "Deploy the Project to the Blockchain."
                                                                                       :completed? false
                                                                                       :active? false
+                                                                                      :href "/wizards/new-project/contract"
                                                                                       :icon :cube}]}}}]
   (list (fn [] {:step step
-                :stepper stepper})
+                :stepper stepper
+                :wizard-router wizard-router})
         (fn []
-          (dom/button {:class "flex justify-center"}
-            (div {:id :new-project
+          (dom/div {:id :new-project
+                       :class "flex justify-center"}
+            (div {
                   :class "mt-4 w-fit h-fit"}
               (stepper-comp (merge stepper {:click-fns {}#_(click-fns id)})))
-      (div {:class "ml-24 relative"}
-        (div {:class "my-4"}
-          (p {:class "text-2xl mb-4"} "Create Project")
-          (p {} "Please enter some basic info about your project. The info in this step can also be updated later."))
-
-
-        (rc/router-comp wizard-router)
-        #_(ui-wizard-router wizard-router)
+            (div {:id :wzr
+                  :class "ml-24 relative"}
+              (div {:class "my-4"}
+                (p {:class "text-2xl mb-4"} "Create Project")
+                (p {} "Please enter some basic info about your project. The info in this step can also be updated later."))
+              ((second (rc/router-comp wizard-router)))
 
         #_(div {:class "flex flex-inline"}
           (if-let [next (get-in step-route [step :back])]
