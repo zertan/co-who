@@ -11,13 +11,11 @@
             ["./evm/util.mjs" :as eu]
             ["./pages/activity.mjs" :as a]
             ["./pages/landing.mjs" :as l]
-            ["./blueprint/datepicker.mjs" :as dp]
             ["./pages/profile.mjs" :as p]
             ["./components/wizards/project/main.mjs" :as wzp]
             ["./components/wizards/project/info.mjs" :as info-step]
             ["./components/wizards/project/contract_step.mjs" :as contract-step]
-            ["./graphql/client.mjs" :as g]
-            #_["./composedb/client.mjs" :as cdb]
+            ["./composedb/client.mjs" :as cdb]
             ["flowbite" :as fb]))
 
 (defonce app (atom {}))

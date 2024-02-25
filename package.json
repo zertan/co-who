@@ -25,16 +25,16 @@
     "vite-plugin-minify": "^1.5.2"
   },
   "dependencies": {
-    "@composedb/client": "^0.5.2",
-    "@didtools/pkh-ethereum": "^0.4.1",
+    "@composedb/client": "^0.6.0",
+    "@didtools/pkh-ethereum": "^0.5.0",
     "blockies-ts": "^1.0.0",
-    "did-session": "^2.1.1",
+    "co-blue": "link:../co-blue",
+    "did-session": "^2.1.2",
     "flowbite": "^2.3.0",
     "flowbite-datepicker": "^1.2.6",
     "mr-who": "link:../mr-who",
-    "co-blue": "link:../co-blue",
     "navigo": "^8.11.1",
     "squint-cljs": "^0.6.94",
-    "viem": "^2.7.13"
+    "viem": "^2.7.14"
   }
 }

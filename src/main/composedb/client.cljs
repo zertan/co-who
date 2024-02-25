@@ -1,7 +1,5 @@
 (ns co-who.composedb.client
-  (:require 
-            ["@composedb/client" :refer [ComposeClient]]
-            ))
+  (:require ["@composedb/client" :refer [ComposeClient]]))
 
 (def composite
   "{\"models\":{\"SimpleProfile\":{\"id\":\"kjzl6hvfrbw6cb1ttgtfyob0aqdxdkprjy598j5rd94ca52kij128y23ede66z5\",\"accountRelation\":{\"type\":\"single\"}}},\"objects\":{\"SimpleProfile\":{\"displayName\":{\"type\":\"string\",\"required\":true}}},\"enums\":{},\"accountData\":{\"simpleProfile\":{\"type\":\"node\",\"name\":\"SimpleProfile\"}}}"
