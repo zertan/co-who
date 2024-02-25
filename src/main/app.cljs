@@ -47,8 +47,3 @@
                            (m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0]))))
 
 (init)
-
-
-(let [node (-> js/document
-               (.getElementById "dp"))]
-  (dp/init-datepicker node))

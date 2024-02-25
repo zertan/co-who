@@ -7,12 +7,13 @@
             #_["./icons/x-mark.mjs" :refer [x-mark]]
             ["co-blue/icons" :refer [x-mark]]))
 
-(defn modal [id on-close hidden? & children]
+(defn modal [{:keys [id on-close hidden?] :as props} & children]
   (div {:id id
         :tabindex "-1"
         :aria-hidden "true"
         :class (u/add-hidden hidden? "fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0
                 h-modal md:h-full bg-black items-center justify-center flex backdrop-blur-sm bg-opacity-75")}
+    children
     (div {:class "relative max-w-md md:h-auto"}
       (div {:class "relative rounded-lg shadow dark:bg-gray-700"}
         (icon-button {:data-modal-hide id} x-mark #(fn [] (println "mu")))

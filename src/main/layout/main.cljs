@@ -14,6 +14,6 @@
                 :wizard-modal wizard-modal})
         (fn [] (dom/div {:id :root
                          :class "bg-black w-screen h-screen text-white dark"}
-                 ((second (h/header-comp header)))                
+                 ((second (h/header-comp header)))
                  ((second (rc/router-comp router)))
                  ((second (wm/modal-comp wizard-modal)))))))

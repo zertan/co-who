@@ -1,13 +1,24 @@
 (ns co-who.layout.wizard-modal
   (:require ["mr-who/dom" :as dom]
+            ["co-blue/icons" :refer [academic-cap]]
             ["../blueprint/modal.mjs" :refer [modal]]
+            ["../blueprint/card.mjs" :as c]
             ["../mutations.mjs" :as m]))
 
 (defn modal-comp [{:keys [close-fn hidden?] :or {close-fn #(println %)
-                                                 hidden? false}}]
+                                                 hidden? true}}]
   (list (fn [] {:close-fn close-fn
                 :hidden? hidden?})
         (fn []
-          (modal "wizard-modal" close-fn hidden?
-                 (dom/div {} "aba")))))
+          (modal {:id "wizard-modal"
+                  :on-close close-fn
+                  :hidden? hidden?}
+                 (dom/div {:class "flex flex-wrap items-center justify-center text-gray-900 dark:text-white"}
+                   (c/card {:heading "Create Project"}
+                           (dom/div {:class "w-20 h-20"} academic-cap))
+                   (c/card {:heading "Get verified"}
+                           (dom/div {:class "w-20 h-20"} academic-cap))
+                   )
+                 
+                 ))))
 
