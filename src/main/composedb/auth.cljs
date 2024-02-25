@@ -1,22 +1,39 @@
 (ns co-who.composedb.auth
-  (:require ["../evm/client.mjs" :refer [compose]]
+  (:require ["../evm/client.mjs" :refer [client]]
             ["../evm/util.mjs" :as eu]
             ["did-session" :refer [DIDSession]]
             ["@didtools/pkh-ethereum" :refer [EthereumWebAuth getAccountId]]))
 
+(def ethProvider client)
 
-#_(eu/request-addresses compose
-                      (fn [x] (println (.then (getAccountId compose (first x))))))
+(def addresses (js/await (client.request {:method "eth_requestAccounts"})))
+(def accountId (js/await (getAccountId ethProvider (first addresses))))
+(def authMethod (js/await (EthereumWebAuth.getAuthMethod ethProvider accountId)))
 
-#_(let [address (eu/request-addresses compose
-                                      (fn [x] (-> x
-                                                  (#(.then (getAccountId compose (first %))))
-                                                  (#(.then (EthereumWebAuth.getAuthMethod compose %)))
-                                                  (#(.then DIDSession.get % )))
-                                        ))
-        session (DIDSession.get account-id)]
-    (println session)
-    )
+(defn authenticate-user []
+  (let [account (eu/request-addresses client
+                                      (fn [x] (.then (getAccountId client (first x)))))
+        ethProvider client
+        auth-method (eu/request-addresses client
+                                          (fn [x] (-> x
+                                                      (#(.then (getAccountId client (first %))))
+                                                      (#(.then (EthereumWebAuth.getAuthMethod client %)))
+                                                      #_(#(DIDSession.get % )))
+                                            ))
+        ;;   session (DIDSession.get account-id)
+        ]
+    #_(println "accc-id: " account-id)
+    #_(println "adr: " authMethod)
+    [account auth-method]
+    ))
+
+(defn get-session [account-id auth-method resources]
+  (let [ethProvider client
+        account account-id]
+    (println account-id)
+    (println auth-method)
+    (DIDSession.get account-id auth-method {:resources resources}))
+  )
 
 ;; const accountId = await getAccountId(ethProvider, addresses[0])
 ;; const authMethod = await EthereumWebAuth.getAuthMethod(ethprovider, accountId)

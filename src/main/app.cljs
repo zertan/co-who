@@ -22,6 +22,8 @@
 
 (defn init []
   (fb/initFlowbite)
+  
+  #_(cdba/authenticate-user)
   (swap! app conj (let [root-comp ((second (main/root-comp app {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:remove ["hidden"]})})))
                                                                 :wizard-modal ((first (wm/modal-comp {:close-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:add ["hidden"]})})))
                                                                 :router ((first (rc/router-comp {:id :router
@@ -57,20 +59,20 @@
                                                                                                                                                                                                  :listener (rc/add-route app [:root :router :route :new-project :wzr :wizard-router :wizard-route] path comp [:new-project-contract])
                                                                                                                                                                                                  :comp comp})]}
                                                                                                                                                               :stepper {:id "stepper"
-                                                                                                                                                                       :steps [{:id :info
-                                                                                                                                                                                :heading "Project Information"
-                                                                                                                                                                                :details "Enter basic project information."
-                                                                                                                                                                                :completed? false
-                                                                                                                                                                                :active? true
-                                                                                                                                                                                :href "/wizards/new-project/info"
-                                                                                                                                                                                :icon :clipboard-document-list}
-                                                                                                                                                                               {:id :contract
-                                                                                                                                                                                :heading "Deploy Contract"
-                                                                                                                                                                                :details "Deploy the Project to the Blockchain."
-                                                                                                                                                                                :completed? false
-                                                                                                                                                                                :active? false
-                                                                                                                                                                                :href "/wizards/new-project/contract"
-                                                                                                                                                                                :icon :cube}]}}))
+                                                                                                                                                                        :steps [{:id :info
+                                                                                                                                                                                 :heading "Project Information"
+                                                                                                                                                                                 :details "Enter basic project information."
+                                                                                                                                                                                 :completed? false
+                                                                                                                                                                                 :active? true
+                                                                                                                                                                                 :href "/wizards/new-project/info"
+                                                                                                                                                                                 :icon :clipboard-document-list}
+                                                                                                                                                                                {:id :contract
+                                                                                                                                                                                 :heading "Deploy Contract"
+                                                                                                                                                                                 :details "Deploy the Project to the Blockchain."
+                                                                                                                                                                                 :completed? false
+                                                                                                                                                                                 :active? false
+                                                                                                                                                                                 :href "/wizards/new-project/contract"
+                                                                                                                                                                                 :icon :cube}]}}))
                                                                                                                        path "/wizards/new-project"]
                                                                                                                    {:path path
                                                                                                                     :listener (rc/add-route app [:root :router :route] path comp [:new-project])
