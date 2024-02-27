@@ -12,6 +12,8 @@
     "postcss:release": "cross-env NODE_ENV=production postcss src/css/index.css -o ./out/css/main.css --verbose",
     "dev": "run-p -l *:watch",
     "ceramic:local": "CERAMIC_ENABLE_EXPERIMENTAL_COMPOSE_DB='true' ceramic daemon --network inmemory",
+    "ceramic:deploy": "composedb composite:deploy ./src/main/composedb/my-composite.json --ceramic-url=http://localhost:7007",
+    "ceramic:graphql": "composedb graphql:server --ceramic-url=http://localhost:7007 --graphiql ./src/main/composedb/runtime-composite.json --port=5005",
     "release": "run-s *:release"
   },
   "keywords": [],
@@ -28,6 +30,8 @@
   "dependencies": {
     "@composedb/client": "^0.6.0",
     "@didtools/pkh-ethereum": "^0.5.0",
+    "@interactjs/actions": "^1.10.26",
+    "@interactjs/interact": "^1.10.26",
     "blockies-ts": "^1.0.0",
     "co-blue": "link:../co-blue",
     "did-session": "^2.1.2",

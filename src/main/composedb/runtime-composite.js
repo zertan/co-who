@@ -1,0 +1,2 @@
+// This is an auto-generated file, do not edit manually
+export const definition = {"models":{"SimpleProfile":{"id":"kjzl6hvfrbw6cb1ttgtfyob0aqdxdkprjy598j5rd94ca52kij128y23ede66z5","accountRelation":{"type":"single"}}},"objects":{"SimpleProfile":{"displayName":{"type":"string","required":true}}},"enums":{},"accountData":{"simpleProfile":{"type":"node","name":"SimpleProfile"}}}

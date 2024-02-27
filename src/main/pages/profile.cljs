@@ -5,8 +5,6 @@
             ["mr-who/utils" :as u]
             ["../evm/util.mjs" :as eu]))
 
-
-
 (defn profile-comp []
   (list (fn [] {})
         (fn [](dom/form {:id :profile}
