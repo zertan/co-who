@@ -1,4 +1,4 @@
-(ns routing
+(ns co-who.routing
   (:require ["navigo" :as navigo]))
 
 (def router (new navigo.default "/" true))

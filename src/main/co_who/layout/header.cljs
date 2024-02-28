@@ -2,7 +2,7 @@
   (:require ["mr-who/dom" :as dom]
             ["../utils.mjs" :as u]
             ["../blueprint/search.mjs" :refer [search-comp]]
-            ["../blueprint/icons/academic-cap.mjs" :refer [academic-cap]]
+            ["co-blue/icons" :refer [academic-cap]]
             ["../blueprint/button.mjs" :refer [icon-button]]
             ["../components/user.mjs" :refer [user-comp]]
             ["../evm/client.mjs" :refer [client chains]]

@@ -9,7 +9,7 @@
     "shadow:release": "shadow-cljs release main",
     "postcss:build": "cross-env TAILWIND_MODE=build postcss src/css/index.css -o ./out/css/main.css --verbose",
     "postcss:watch": "cross-env TAILWIND_MODE=watch NODE_OPTIONS=--max-old-space-size=8000 postcss src/css/index.css -o ./out/css/main.css --verbose -w",
-    "postcss:release": "cross-env NODE_ENV=production postcss src/css/index.css -o ./out/css/main.css --verbose",
+    "postcss:release": "cross-env NODE_ENV=production postcss src/css/index.css -o ./out/main.css --verbose",
     "dev": "run-p -l *:watch",
     "ceramic:local": "CERAMIC_ENABLE_EXPERIMENTAL_COMPOSE_DB='true' ceramic daemon --network inmemory",
     "ceramic:deploy": "composedb composite:deploy ./src/main/composedb/my-composite.json --ceramic-url=http://localhost:7007",

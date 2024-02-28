@@ -1,0 +1,3 @@
+{:paths ["src/main" "src/css"
+         "node_modules/@squint-cljs/macros/src"]
+ :output-dir "out/"}
