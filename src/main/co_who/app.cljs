@@ -1,5 +1,4 @@
 (ns co-who.app
-  (:require-macros [co-who.component :as c :refer [dod]])
   (:require ["mr-who/dom" :as dom]
            ["./routing.mjs" :as r]
            ["./layout/main.mjs" :as main]
@@ -17,15 +16,16 @@
            ["./components/wizards/project/info.mjs" :as info-step]
            ["./components/wizards/project/contract_step.mjs" :as contract-step]
            ["./composedb/client.mjs" :as cdb]
-           ;["./component.mjs" :as c]
-           ["flowbite" :as fb]))
+           ;["./component.mjs" :as cs]
+           ["flowbite" :as fb])
+  (:require-macros [co-who.component :as c :refer [dod Component]]))
 
 (defonce app (atom {}))
-;;;;;;;
-#_(c/dod asd (+ 1 1 21))
-#_(println asd)
+;;;;;;;;;;;;aaaaaaaaaaaaaaa
+;(c/dod asd (+ 1 1 21))
+;(println c/Component)
                                         ;1
-#_(c/defc NewComp)
+#_(c/defc NewComp [this ])
 
 #_(c/defc NewComp [this {:keys [id]} & children]
     {:ident [:new-comp/id 0]
