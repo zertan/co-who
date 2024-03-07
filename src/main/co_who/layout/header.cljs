@@ -31,10 +31,13 @@
                                 dark:border-gray-800 dark:text-gray-400"} 
                         (dom/div {:id :n2
                                   :class "flex flex-wrap justify-between items-center mx-auto max-w-screen-xl"}
-                          (dom/a  {:href "#", :class "flex items-center"}
-                            (dom/img  {:src logo
-                                       :class "mr-3 h-6 sm:h-9"
-                                       :alt "Codo Logo"})
+                          (dom/a  {:id :n2a
+                                   :href "#", :class "flex items-center"}
+                                  (constantly
+                                   (dom/img  {:id :logo
+                                              :src logo
+                                              :class "mr-3 h-6 sm:h-9"
+                                              :alt "Codo Logo"}))
                             #_(dom/span  {:class "self-center text-xl font-semibold whitespace-nowrap dark:text-white"}
                                 "Codo"))
                           (dom/div  {:id :n3

@@ -1,8 +1,8 @@
 (ns co-who.component
   (:require [squint.core :refer [defclass]])
-  (:require-macros [co-who.component :refer [dod]]))
+  #_(:require-macros [co-who.component :refer [dod]]))
 
-(defclass Component
+#_(defclass Component
 
    (field -ident [])
    (field -query [])

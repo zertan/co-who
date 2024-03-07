@@ -6,9 +6,9 @@
             ["./wizard_modal.mjs" :as wm]
             #_["./../mutations.mjs" :as m]))
 
-(defn root-comp [app {:keys [router header wizard-modal] :or {router ((first (rc/router-comp {})))
-                                                              header ((first (h/header-comp {})))
-                                                              wizard-modal ((first (wm/modal-comp {})))}}
+(defn root-comp [{:keys [router header wizard-modal] :or {router ((first (rc/router-comp {})))
+                                                          header ((first (h/header-comp {})))
+                                                          wizard-modal ((first (wm/modal-comp {})))} :as props}
                  & children]
   (list (fn [] {:router router
                 :header header
