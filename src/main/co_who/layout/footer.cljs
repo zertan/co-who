@@ -1,7 +1,7 @@
 (ns co-who.layout.footer
   (:require ["mr-who/dom" :as dom]
-            ["../blueprint/modal.mjs" :refer [modal]]
-            ["../mutations.mjs" :as m]))
+            [co-who.blueprint.modal :refer [modal]]
+            [co-who.mutations :as m]))
 
 (defn footer-comp [close-fn]
   (modal "some-modal" close-fn false (dom/div {} "aba"))

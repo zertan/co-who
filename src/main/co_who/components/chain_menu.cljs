@@ -1,8 +1,8 @@
 (ns co-who.components.chain-manu
-  (:require ["../blueprint/dropdown.mjs" :refer [dropdown-comp]]
-            ["../blueprint/blockie.mjs" :refer [blockie-comp]]
-            ["../blueprint/button.mjs" :refer [button]]
-            ["../evm/util.mjs" :as eu]
+  (:require ["co-who.blueprint.dropdown" :refer [dropdown-comp]]
+            ["co-who.blueprint.blockie" :refer [blockie-comp]]
+            ["co-who.blueprint.button" :refer [button]]
+            ["co-who.evm.util" :as eu]
             ["mr-who/mutations" :as m]
             ;["../blueprint/icons/web3" :refer [ethereum polygon optimism arbitrum hardhat]]
             ))

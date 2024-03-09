@@ -32,6 +32,7 @@
     "@didtools/pkh-ethereum": "^0.5.0",
     "@interactjs/actions": "^1.10.26",
     "@interactjs/interact": "^1.10.26",
+    "abitype": "^1.0.1",
     "blockies-ts": "^1.0.0",
     "co-blue": "link:../co-blue",
     "did-session": "^2.1.2",

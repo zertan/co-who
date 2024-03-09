@@ -1,9 +1,9 @@
 (ns co-who.pages.landing
   (:require ["mr-who/dom" :as dom]
-            ["../blueprint/blockie.mjs" :refer [blockie-comp]]
-            ["../blueprint/timeline.mjs" :refer [timeline-comp]]
+            [co-who.blueprint.blockie :refer [blockie-comp]]
+            [co-who.blueprint.timeline :refer [timeline-comp]]
             ["mr-who/utils" :as u]
-            ["../evm/util.mjs" :as eu]))
+            [co-who.evm.util :as eu]))
 
 (defn activity-comp []
   (list (fn [] {})

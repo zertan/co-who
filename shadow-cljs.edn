@@ -1,0 +1,13 @@
+;; shadow-cljs configuration
+{:dev-http
+ {8020 "public"}
+
+ :builds
+ {:main
+  {:target :browser
+   :output-dir "public/js"
+   :asset-path "/js"
+   :devtools {:after-load co-who.app/init}
+   :modules
+   {:main ; becomes public/js/main.js
+    {:init-fn co-who.app/init}}}}}

@@ -1,9 +1,9 @@
 (ns co-who.layout.main
   (:require ["mr-who/dom" :as dom]
-            ["./header.mjs" :as h]
-            ["./router.mjs" :as rc]
+            [co-who.layout.header :as h]
+            [co-who.layout.router :as rc]
             #_["./footer.mjs" :as f]
-            ["./wizard_modal.mjs" :as wm]
+            [co-who.layout.wizard_modal :as wm]
             #_["./../mutations.mjs" :as m]))
 
 (defn root-comp [{:keys [router header wizard-modal] :or {router ((first (rc/router-comp {})))

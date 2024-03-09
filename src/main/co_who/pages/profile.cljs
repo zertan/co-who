@@ -1,9 +1,5 @@
 (ns co-who.pages.profile
-  (:require ["mr-who/dom" :as dom]
-            ["../blueprint/blockie.mjs" :refer [blockie-comp]]
-            ["../blueprint/timeline.mjs" :refer [timeline-comp]]
-            ["mr-who/utils" :as u]
-            ["../evm/util.mjs" :as eu]))
+  (:require ["mr-who/dom" :as dom]))
 
 (defn profile-comp []
   (list (fn [] {})

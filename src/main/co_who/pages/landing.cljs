@@ -1,15 +1,14 @@
 (ns co-who.pages.landing
   (:require ["mr-who/dom" :as dom]
             #_["@shopify/draggable" :refer [Draggable]]
-            ["@interactjs/interact" :as intr]
-            ["@interactjs/actions/drag"]
-            ["../blueprint/button.mjs" :refer [button]]
-            ["../blueprint/input.mjs" :refer [input]]
-            ["../mutations.mjs" :as m]
-            ["../blueprint/datepicker.mjs" :refer [date-picker-comp]]
-            ["../composedb/client.mjs" :as cli :refer [compose]]))
+            #_["@interactjs/interact" :as intr]
+            #_["@interactjs/actions/drag"]
+            [co-who.blueprint.input :refer [input]]
+            [co-who.mutations :as m]
+            [co-who.blueprint.datepicker :refer [date-picker-comp]]
+            [co-who.composedb.client :as cli :refer [compose]]))
 
-(def interact (:default intr))
+#_(def interact (:default intr))
 
 #_(defn init-draggable [node & opts]
   (Draggable. node opts))

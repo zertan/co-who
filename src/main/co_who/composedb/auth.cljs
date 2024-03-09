@@ -1,6 +1,6 @@
 (ns co-who.composedb.auth
-  (:require ["../evm/client.mjs" :refer [client]]
-            ["../evm/util.mjs" :as eu]
+  (:require ["co-who.evm.client" :refer [client]]
+            ["co-who.evm.util" :as eu]
             ["did-session" :refer [DIDSession]]
             ["@didtools/pkh-ethereum" :refer [EthereumWebAuth getAccountId]]))
 

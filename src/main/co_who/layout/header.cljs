@@ -1,12 +1,12 @@
-(ns mr-who.header
+(ns co-who.layout.header
   (:require ["mr-who/dom" :as dom]
-            ["../utils.mjs" :as u]
-            ["../blueprint/search.mjs" :refer [search-comp]]
+            [co-who.utils :as u]
+            [co-who.blueprint.search :refer [search-comp]]
             ["co-blue/icons" :refer [academic-cap]]
-            ["../blueprint/button.mjs" :refer [icon-button]]
-            ["../components/user.mjs" :refer [user-comp]]
-            ["../evm/client.mjs" :refer [client chains]]
-            ["../components/chain_menu.mjs" :refer [chain-menu-comp]]))
+            [co-who.blueprint.button :refer [icon-button]]
+            [co-who.components.user :refer [user-comp]]
+            [co-who.evm.client :refer [client chains]]
+            [co-who.components.chain-menu :refer [chain-menu-comp]]))
 
 (defn list-comp [item href]
   (dom/li {}

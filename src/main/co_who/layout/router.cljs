@@ -1,7 +1,7 @@
 (ns co-who.layout.router
   (:require ["mr-who/dom" :as dom]
-            ["../routing.mjs" :as r]
-            ["../mutations.mjs" :as m]))
+            [co-who.routing :as r]
+            [co-who.mutations :as m]))
 
 ;; add the component render element to the render-app state
 

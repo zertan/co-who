@@ -17,6 +17,9 @@ dependencies:
   '@interactjs/interact':
     specifier: ^1.10.26
     version: 1.10.26
+  abitype:
+    specifier: ^1.0.1
+    version: 1.0.1
   blockies-ts:
     specifier: ^1.0.0
     version: 1.0.0
@@ -1473,6 +1476,18 @@ packages:
 
   /abitype@1.0.0:
     resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
+    dev: false
+
+  /abitype@1.0.1:
+    resolution: {integrity: sha512-HyHCfBwNYvHPGWsdv5PiKj8b1LnZUCuALyUWg5iP/wbK8FpdmTI4Qk9CYzjNgmsWwRw5j/DCruOltrnUGQdBeQ==}
     peerDependencies:
       typescript: '>=5.0.4'
       zod: ^3 >=3.22.0

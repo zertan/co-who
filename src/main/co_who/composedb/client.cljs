@@ -1,7 +1,7 @@
 (ns co-who.composedb.client
   (:require ["@composedb/client" :refer [ComposeClient]]
             ["did-session" :refer [DIDSession]]
-            ["./auth.mjs" :as auth :refer [accountId authMethod]]))
+            ["co-who.auth" :as auth :refer [accountId authMethod]]))
 
 #_(def composite (js/await
                   (->
