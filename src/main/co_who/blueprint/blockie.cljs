@@ -1,8 +1,7 @@
 (ns co-who.blueprint.blockie
   (:require ["mr-who/dom" :as dom :refer [img]]
-            ["mr-who/utils" :as u]
             ["blockies-ts" :as blockies]
-            #_["ethereum-blockies-base64" :refer [makeBlockie]]))
+          ))
 
 (defn make-blockie [address]
   (.toDataURL (blockies/create #js {:seed address})))

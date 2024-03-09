@@ -1,4 +1,4 @@
-(ns co-who.pages.landing
+(ns co-who.pages.activity
   (:require ["mr-who/dom" :as dom]
             [co-who.blueprint.blockie :refer [blockie-comp]]
             [co-who.blueprint.timeline :refer [timeline-comp]]

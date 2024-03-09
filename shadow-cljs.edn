@@ -7,7 +7,12 @@
   {:target :browser
    :output-dir "public/js"
    :asset-path "/js"
-   :devtools {:after-load co-who.app/init}
+   :release    {:compiler-options {:optimizations :advanced}
+                                ;:output-dir "target/"
+                                ;:module-hash-names 8
+                                :build-options {:manifest-name "assets.edn"}}
+   :devtools {:after-load co-who.app/init
+              :watch-dir "public"}
    :modules
    {:main ; becomes public/js/main.js
     {:init-fn co-who.app/init}}}}}
