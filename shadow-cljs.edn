@@ -1,18 +1,23 @@
 ;; shadow-cljs configuration
 {:dev-http
- {8020 "public"}
+ {8020 "external/dist"}
 
  :builds
  {:main
   {:target :browser
-   :output-dir "public/js"
-   :asset-path "/js"
+   :output-dir "external/src"
+   ;:asset-path "/js"
+   :js-options {:js-provider :external
+                :external-index "external/src/index.js"
+                :allow-nested-packages false}
    :release    {:compiler-options {:optimizations :advanced}
                                 ;:output-dir "target/"
                                 ;:module-hash-names 8
+                                :output-feature-set :es6
                                 :build-options {:manifest-name "assets.edn"}}
    :devtools {:after-load co-who.app/init
-              :watch-dir "public"}
+              :watch-dir "external"}
+   ;:externs ["@composedb/client"]
    :modules
    {:main ; becomes public/js/main.js
     {:init-fn co-who.app/init}}}}}

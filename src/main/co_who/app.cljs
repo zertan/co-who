@@ -6,13 +6,13 @@
            [co-who.layout.header :as hc]
            [co-who.components.user :refer [user-comp]]
            [co-who.mutations :as m]
-           [co-who.evm.client :refer [client chains]]
+           [co-who.evm.client :as ec]
            [co-who.layout.wizard-modal :as wm]
            [co-who.evm.util :as eu]
            [co-who.pages.activity :as a]
            [co-who.pages.landing :as l]
            [co-who.pages.profile :as p]
-           [co-who.components.wizardco-who.project.main :as wzp]
+           [co-who.components.wizards.project.main :as wzp]
            [co-who.components.wizards.project.info :as info-step]
            [co-who.components.wizards.project.contract-step :as contract-step]
            [co-who.composedb.client :as cdb]
@@ -41,10 +41,13 @@
   (cp.render))
 
 (defn init []
+  (println "init")
   (fb/initFlowbite)
 
+  (r/init-routing)
+
   #_(cdba/authenticate-user)
-  (let [root-comp (main/root-comp {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:remove ["hidden"]})})))
+  (let [root-comp (main/simple-comp) #_(main/root-comp {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:remove ["hidden"]})})))
                                    :wizard-modal ((first (wm/modal-comp {:close-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:add ["hidden"]})})))
                                    :router ((first (rc/router-comp {:id :router
                                                                     :route-id :route
@@ -100,22 +103,26 @@
                                                                                                        :listener (rc/add-route app [:root :router :route] path comp [:new-project])
                                                                                                        :comp comp})]})))})
         render ((second root-comp))]
+    (println render)
     (dom/append-helper (js/document.getElementById "app") (:node (:root render)))
     (reset! app render)
     (reset! data ((first root-comp)))
-    )
   (println ":data " @data)
+
   (r/router.resolve)
-  (set! (.-app js/window) app)
+  (set! (.-render js/window) render)
+  (set! (.-app js/window) app)))
+
+  #_(ec/init-client)
+  #_(cdb/init-client)
+
   #_(set! (.-draggable js/window) (keys l/interact))
-  (eu/add-accounts-changed js/window.ethereum
+  #_(eu/add-accounts-changed js/window.ethereum
                            #(let[address (first %)]
                               (m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0])))
-  (eu/request-addresses client
+  #_(eu/request-addresses client
                         #(let[address (first %)]
-                           (m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0]))))
-
-(init)
+                           (m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0])))
 
 #_(let [query ["query {
                 simpleProfile {
@@ -123,3 +130,5 @@
                }
              }"]]
     (cdb/run-query cdb/client query))
+(println "a")
+(init)

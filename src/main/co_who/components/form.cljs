@@ -1,4 +1,4 @@
-(ns form
+(ns co-who.components.form
   (:require ["mr-who/dom" :as dom]))
 
 (defn form-comp []

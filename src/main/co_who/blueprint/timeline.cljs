@@ -2,7 +2,7 @@
     (:require ["mr-who/dom" :as dom]
               [co-who.blueprint.blockie :as b :refer [blockie-comp]]))
 
-(defn event-comp [{:keys [event/id blockie] :or {event/id (u/random-uuid)
+(defn event-comp [{:keys [id blockie] :or {id (random-uuid)
                                                  blockie (:data (blockie-comp))}}]
   (dom/a {:id id
           :href "#"

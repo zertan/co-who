@@ -5,7 +5,7 @@
               [co-who.blueprint.popover :refer [popover-comp]]
               [co-who.blueprint.blockie :as b :refer [blockie-comp]]))
 
-(defn user-comp [{:keys [address] :or {:address "0x0"}}]
+(defn user-comp [{:keys [address] :or {address "0x0"}}]
   (list (fn [] {:user/id :user
                 :address address})
         (fn [] (dom/div {:id :user

@@ -6,13 +6,12 @@
 (defn make-blockie [address]
   (.toDataURL (blockies/create #js {:seed address})))
 
-(defn blockie-comp [{:keys [blockie/id address]
-                     :or {blockie/id (u/random-uuid)
-                          address "0x0"}}]
+(defn blockie-comp [{:keys [id address] :or {id 1 #_(random-uuid)
+                                             address "0x0"}}]
   (let [node (dom/img {:id id
                        :src (make-blockie address)})
         node-id "asd-2";(u/random-uuid)
-        data {:blockie/id id
+        data {:id id
               :address address
               :mr-who/mounted-elements [{:mr-who/id (assoc {} node-id node)}]}]
     {:render node

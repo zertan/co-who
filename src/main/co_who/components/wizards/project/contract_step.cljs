@@ -1,6 +1,6 @@
 (ns co-who.components.wizards.project.contract-step
   (:require ["mr-who/dom" :as dom :refer [div p button]]
-            ["co-who.blueprint.card" :as c]))
+            [co-who.blueprint.card :as c]))
 
 (defn contract-step [{:keys [project active? complted?] :as props :or {active? false
                                                                        completed? false

@@ -6,7 +6,7 @@
 ;; add the component render element to the render-app state
 
 (defn add-route [app path route-path comp ident]
-  (r/add-route r/router route-path
+  #_(r/add-route r/router route-path
                #(do (println "run change route: " path)
                     (m/replace-mutation app path comp ident))))
 
@@ -17,7 +17,7 @@
 
 (defn route-comp [comp path app ident]
   {:path path
-   :listener (add-route app (dom/get-dom-paths ident) [] path ident)
+   ;:listener (add-route app (dom/get-dom-paths ident) [] path ident)
    :comp comp})
 
 (defn router-comp [{:keys [id route-id active-path path-children] :or {id :router

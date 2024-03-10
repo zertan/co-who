@@ -1,7 +1,7 @@
 (ns co-who.components.wizards.project.main
   (:require ["mr-who/dom" :as dom :refer [div p button]]
-            ["co-who.layout.router" :as rc]
-            ["co-who.blueprint.stepper" :refer [stepper-comp]]))
+            [co-who.layout.router :as rc]
+            [co-who.blueprint.stepper :refer [stepper-comp]]))
 
 (defn project-wizard-comp [{:keys [step stepper wizard-router] :or {step :info
                                                                     wizard-router {}

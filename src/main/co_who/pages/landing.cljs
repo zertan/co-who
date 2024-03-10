@@ -106,7 +106,7 @@
                            "w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800",
                            :required nil})
                          ))
-                     a (.draggable (interact ".item") #js {:listeners {:start (fn [e] (js/console.log "drag"))
+                     #_a #_(.draggable (interact ".item") #js {:listeners {:start (fn [e] (js/console.log "drag"))
                                                                    :move (fn [e] (js/console.log e.pageX e.pageY))}})
                      ;draggable (init-draggable js/document.body {})
                      ;a (draggable.on "drag:start" (fn [e] (println e)))

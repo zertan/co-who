@@ -1,6 +1,7 @@
 {:deps {org.clojure/clojurescript {:mvn/version "1.11.121"}
         town.lilac/pyramid {:mvn/version "3.4.0"}
-        metosin/reitit {:mvn/version "0.7.0-alpha7"}}
+        metosin/reitit {:mvn/version "0.7.0-alpha7"}
+        se.w3t/mr-who {:local/root "../mr-who"}}
  :paths ["src/main"]
  :aliases {:build {:extra-paths ["src/build"]}
            :test {:extra-paths ["src/test"]}

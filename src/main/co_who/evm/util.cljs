@@ -7,10 +7,10 @@
 (defn account-from-private-key [key]
   (privateKeyToAccount key))
 
-(defn ^:async request-addresses  [client f]
+(defn request-addresses  [client f]
   (.then (.requestAddresses client) f))
 
-(defn ^:async get-address [client f]
+(defn get-address [client f]
   (.then (.getAddresses client)
          f))
 

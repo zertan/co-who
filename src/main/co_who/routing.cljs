@@ -1,7 +1,12 @@
 (ns co-who.routing
   (:require ["navigo" :as navigo]))
 
-(def router (new navigo.default "/" true))
+#_(def n (aget navigo "default"))
+
+(declare router)
+
+(defn init-routing []
+  (def router (new navigo/default "/" true)))
 
 (defn navigate [r path]
   (r.navigate path))

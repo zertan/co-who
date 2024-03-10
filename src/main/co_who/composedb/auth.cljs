@@ -1,14 +1,20 @@
 (ns co-who.composedb.auth
-  (:require ["co-who.evm.client" :refer [client]]
-            ["co-who.evm.util" :as eu]
+  (:require [co-who.evm.client :refer [client]]
+            [co-who.evm.util :as eu]
             ["did-session" :refer [DIDSession]]
             ["@didtools/pkh-ethereum" :refer [EthereumWebAuth getAccountId]]))
 
-(def ethProvider client)
+(declare ethProvider)
+(declare addresses)
+(declare accountId)
+(declare authMethod)
 
-(def addresses (js/await (client.request {:method "eth_requestAccounts"})))
-(def accountId (js/await (getAccountId ethProvider (first addresses))))
-(def authMethod (js/await (EthereumWebAuth.getAuthMethod ethProvider accountId)))
+(defn init-auth []
+  (def ethProvider client)
+
+  (def addresses (js/await (client.request {:method "eth_requestAccounts"})))
+  (def accountId (js/await (getAccountId ethProvider (first addresses))))
+  (def authMethod (js/await (EthereumWebAuth.getAuthMethod ethProvider accountId))))
 
 (defn authenticate-user []
   (let [account (eu/request-addresses client
