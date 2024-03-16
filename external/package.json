@@ -1,0 +1,29 @@
+{
+  "name": "co-who-external",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@composedb/client": "^0.7.1",
+    "blockies-ts": "^1.0.0",
+    "co-blue": "link:../co-blue",
+    "did-session": "^2.1.2",
+    "flowbite": "^2.3.0",
+    "flowbite-datepicker": "^1.2.6",
+    "mr-who": "link:../mr-who",
+    "navigo": "^8.11.1",
+    "viem": "^2.7.22"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-legacy": "^5.3.2",
+    "vite": "^5.1.5",
+    "vite-plugin-minify": "^1.5.2",
+    "vite-plugin-node-polyfills": "^0.21.0",
+    "google-closure-library": "^20230802.0.0"
+  }
+}
