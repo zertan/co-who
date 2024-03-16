@@ -1,11 +1,11 @@
 ;; shadow-cljs configuration
 {:dev-http
- {8020 "external/dist"}
+ {8020 "external"}
 
  :builds
  {:main
   {:target :browser
-   :output-dir "external/src"
+   :output-dir "output/src"
    ;:asset-path "/js"
    :js-options {:js-provider :external
                 :external-index "external/src/index.js"

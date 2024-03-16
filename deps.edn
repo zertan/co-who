@@ -1,11 +1,16 @@
 {:deps {org.clojure/clojurescript {:mvn/version "1.11.121"}
         town.lilac/pyramid {:mvn/version "3.4.0"}
         metosin/reitit {:mvn/version "0.7.0-alpha7"}
-        se.w3t/mr-who {:local/root "../mr-who"}}
+        se.w3t/mr-who {:local/root "../mr-who"}
+        }
  :paths ["src/main"]
  :aliases {:build {:extra-paths ["src/build"]}
            :test {:extra-paths ["src/test"]}
            :cider {:extra-deps {cider/cider-nrepl {:mvn/version "0.37.1"}
                                 cider/piggieback {:mvn/version "0.5.3"}}}
+           :nrepl {:extra-deps {nrepl/nrepl {:mvn/version "RELEASE"}
+                                cider/cider-nrepl {:mvn/version "0.37.1"}
+                                cider/piggieback {:mvn/version "0.5.3"}}
+                   :main-opts ["-m" "nrepl.cmdline"]}
            :shadow-cljs {:extra-deps {thheller/shadow-cljs {:mvn/version "2.25.5"}}
                          :main-opts ["-m" "shadow.cljs.devtools.cli"]}}}
