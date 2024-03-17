@@ -42,14 +42,14 @@
     (swap! app assoc-in ident e.target.value)))
 
 
-(defn dropdown-select [items on-change]
+(defn dropdown-select [title items on-change]
   (dom/form
       {:class "max-w-sm mx-auto"}
       (dom/label
           {:for "countries",
            :class
            "block mb-2 text-sm font-medium text-gray-900 dark:text-white"}
-          "Select an option")
+        title)
       (dom/select
        {:id "countries",
         :on-change on-change

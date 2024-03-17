@@ -5,7 +5,7 @@
             ["co-blue/icons" :refer [academic-cap]]
             [co-who.blueprint.button :refer [icon-button]]
             [co-who.components.user :refer [user-comp]]
-            [co-who.evm.client :refer [client chains]]
+            [co-who.evm.client :refer [wallet-client chains]]
             [co-who.components.chain-menu :refer [chain-menu-comp]]))
 
 (defn list-comp [item href]
@@ -43,7 +43,7 @@
                           (dom/div  {:id :n3
                                      :class "flex items-center lg:order-2 lg:space-x-8"}
                             (search-comp)
-                            (chain-menu-comp client chains (:chain client))
+                            (chain-menu-comp @wallet-client @chains (:chain @wallet-client))
                             #_(dom/a 
                                   {:href "#",
                                    :class

@@ -49,7 +49,7 @@
      :query []}
     (dom/div {} "blah"))
 
-#_(println NewComp)
+#_(println NewCompa)
 
 #_(defn ui-landing (landing-comp-factory  ident query))
 ;
@@ -64,6 +64,7 @@
                                         :address "0x0"
                                         :entries (filterv #(s/valid? ::es/function %) abi/token-abi)
                                         :select-on-change (fn [e] (swap! app assoc-in [:smart-contract :selected] e.target.value))
+                                        :on-click (sm/append-evm-transaction app)
                                         :on-change (in/on-change app [:smart-contract :input])}))
 
         #_(main/root-comp {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:remove ["hidden"]})})))
@@ -126,8 +127,8 @@
     #_(println "<aaaaa" root-comp)
 
     #_(println (js/document.getElementById "app"))
-    (dom/append-helper (js/document.getElementById "app") (:node (:app root-comp )) {:action dom/replace-node})
-    (swap! app deep-merge (:app root-comp))
+    (dom/append-helper (js/document.getElementById "app") (:mr-who/node (:app root-comp )) {:action dom/replace-node})
+    (swap! app py/add (:app root-comp))
     ))
 
 (defn ^:dev/after-load start []
@@ -151,6 +152,13 @@
   (inspector/inspect "App state" app))
 
 (comment
+
+
+  (let [selected (get-in @app [:smart-contract :selected])
+        data (get-in @app [:function/id selected])]
+    [selected
+     data])
+
   (set! (.-draggable js/window) (keys l/interact))
   (eu/add-accounts-changed js/window.ethereum
                            #(let[address (first %)]

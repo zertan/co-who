@@ -18,8 +18,7 @@
     (dom/append-helper replace-element (:mr-who/node render))
     (swap! app assoc-in path render)
     (when-not cache
-      (swap! app assoc-in (conj ident :cache) render))
-    (js/console.log @app)))
+      (swap! app assoc-in (conj ident :cache) render))))
 
 
 (defn replace-primitive-mutation [app path primitive ident]

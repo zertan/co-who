@@ -6,16 +6,30 @@
   (fn  [e]
     (swap! app assoc-in ident e.target.value)))
 
-(defn input [{:keys [id label placeholder on-submit on-change]} & children]
+(defn input [{:keys [id label placeholder on-submit on-change required?]} & children]
   (dom/div {:class "mb-6"}
     (l/label label)
-    (dom/input {:id id
-                :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
+    (dom/input {:class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
                         focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
                         dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500"
                 :placeholder placeholder
                 :on-change on-change
                 :on-submit on-submit
                 :value children
-                :required true
+                :required required?
                 })))
+
+(defn number-input [{:keys [id label placeholder on-submit on-change required?]} & children]
+  (dom/div {:class "mb-6"}
+    (l/label label)
+    (dom/input
+     {:type "number",
+      :aria-describedby "helper-text-explanation",
+      :class
+      "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500",
+                :placeholder placeholder
+                :on-change on-change
+                :on-submit on-submit
+                :value children
+                :required required?}))
+)
