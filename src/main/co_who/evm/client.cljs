@@ -7,6 +7,6 @@
 (declare chains)
 
 (defn init-client []
-  (def client (createWalletClient {:chain mainnet
-                                   :transport (custom js/window.ethereum)}))
+  (def client (createWalletClient (clj->js {:chain mainnet
+                                             :transport (custom js/window.ethereum)})))
   (def chains [mainnet hardhat]))

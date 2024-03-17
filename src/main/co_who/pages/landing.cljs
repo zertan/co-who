@@ -3,7 +3,7 @@
             #_["@shopify/draggable" :refer [Draggable]]
             #_["@interactjs/interact" :as intr]
             #_["@interactjs/actions/drag"]
-            [co-who.blueprint.input :refer [input]]
+            [co-who.blueprint.input :as in]
             [co-who.mutations :as m]
             [co-who.blueprint.datepicker :refer [date-picker-comp]]
             [co-who.composedb.client :as cli :refer [compose]]))
@@ -53,7 +53,7 @@
         (.then (fn [response]
                  (let [d (-> response :data :node :displayName)]
                    (m/replace-mutation app [:root :router :route :landing-form :idiv]
-                                       (fn [] (input {:id :l-input
+                                       (fn [] (in/input {:id :l-input
                                                       :placeholder ""}
                                                      d)) [:landing :l-input] {})))))))
 
@@ -73,10 +73,6 @@
     (-> (compose.executeQuery mutation (mutation-vars (get-in @app ident)))
         (.then (fn [response] (println response))))))
 
-(defn on-change [app ident]
-  (fn  [e]
-    (swap! app assoc-in ident e.target.value)))
-
 (defn landing-comp [{:keys [id display-name on-click on-change on-click-mut] :or {id :landing
                                                                                   display-name "John Doe"}}]
   (list (fn [] {:id id
@@ -94,9 +90,9 @@
                                                
                                                (on-click-mut)
                                                (println "w"))}
-                         (input {:id :l-input
-                                 :on-change on-change
-                                 :placeholder "asds"}
+                         (in/input {:id :l-input
+                                    :on-change on-change
+                                    :placeholder "asds"}
                                 display-name)
                          (dom/input
                           {:id "remember",

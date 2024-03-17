@@ -1,9 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./index.html",
-    "./out/co_who/*.{js,ts,jsx,tsx,mjs}",
-    "./out/co_who/**/*.{js,ts,jsx,tsx,mjs}",
+    "./public/index.html",
+    "./public/js/*.{js,ts,jsx,tsx,mjs}",
+    "./public/js/**/*.{js,ts,jsx,tsx,mjs}",
     "./node_modules/flowbite/**/*.js"
   ],
   theme: {

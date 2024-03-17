@@ -2550,3 +2550,6 @@
   ]")
 
 (def token-abi (js->clj (.parse js/JSON token-json) :keywordize-keys true))
+
+(defn indexed-abi [abi]
+  (map #(conj {(keyword (str (:type %1) "/id")) (:name %1)} %1) abi))

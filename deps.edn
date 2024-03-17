@@ -3,15 +3,18 @@
         town.lilac/pyramid {:mvn/version "3.4.0"}
         metosin/reitit {:mvn/version "0.7.0-alpha7"}
         se.w3t/mr-who {:local/root "../mr-who"}
+        org.clojure/core.async {:mvn/version "1.6.681"}
         }
  :paths ["src/main"]
  :aliases {:build {:extra-paths ["src/build"]}
            :test {:extra-paths ["src/test"]}
            :tools {:extra-deps {org.clojure/tools.namespace {:mvn/version "1.5.0"}
+                                binaryage/devtools {:mvn/version "1.0.7"}
+                                cjohansen/gadget-inspector {:mvn/version "0.2023.04.12"}
                                 ;mx.cider/tools.deps.enrich-classpath {:mvn/version "1.17.1"}
                                 }}
            :nrepl {:extra-deps {cider/cider-nrepl {:mvn/version "0.47.0"}
-                                {refactor-nrepl {:mvn/version "3.10.0"}}
+                                refactor-nrepl {:mvn/version "3.10.0"}
                                 cider/piggieback {:mvn/version "0.5.3"}}
                    :main-opts ["-m" "nrepl.cmdline"]}
            :shadow-cljs {:extra-deps {thheller/shadow-cljs {:mvn/version "2.26.2"}}

@@ -10,11 +10,9 @@
 (declare authMethod)
 
 (defn init-auth []
-  (def ethProvider client)
-
   (def addresses (js/await (client.request {:method "eth_requestAccounts"})))
   (def accountId (js/await (getAccountId ethProvider (first addresses))))
-  (def authMethod (js/await (EthereumWebAuth.getAuthMethod ethProvider accountId))))
+  (def authMethod (js/await (EthereumWebAuth.getAuthMethod client accountId))))
 
 (defn authenticate-user []
   (let [account (eu/request-addresses client
@@ -33,13 +31,8 @@
     [account auth-method]
     ))
 
-(defn get-session [account-id auth-method resources]
-  (let [ethProvider client
-        account account-id]
-    (println account-id)
-    (println auth-method)
-    (DIDSession.get account-id auth-method {:resources resources}))
-  )
+(defn get-session [client account-id auth-method resources]
+  (DIDSession.get account-id auth-method {:resources resources}))
 
 ;; const accountId = await getAccountId(ethProvider, addresses[0])
 ;; const authMethod = await EthereumWebAuth.getAuthMethod(ethprovider, accountId)

@@ -1,6 +1,6 @@
 (ns co-who.evm.specs
   (:require [cljs.spec.alpha :as s]
-            [co-who.evm.abi :refer [abi]]))
+            [co-who.evm.abi :refer [token-abi]]))
 
 ;; Basic Ethereum Solidity types
 (s/def ::basic-type (s/or :uint256 #(= "uint256" %)
@@ -25,23 +25,48 @@
                             :array ::array-type
                             :custom ::custom-type))
 
+
 (s/def ::name string?)
 
-(s/def :type/constructor #(= "constructor" %))
-(s/def :type/function #(= "function" %))
-(s/def :type/event #(= "event" %))
-(s/def :type/error #(= "error" %))
+#_(s/def :abi-type/constructor #(= "constructor" %))
+#_(s/def :abi-type/function #(= "function" %))
+#_(s/def :abi-type/event #(= "event" %))
+#_(s/def :abi-type/error #(= "error" %))
 
-(s/def ::stateMutability (s/or :pure #(= "pure" %)
-                               :view #(= "view" %)
-                               :nonpayable #(= "nonpayable" %)
-                               :payable #(= "payable" %)))
+#_(s/def ::type #{"constructor" "function" "event" "error"} #_(s/or :constructor #(= "constructor" %)
+                    :function #(= "function" %)
+                    :event #(= "event" %)
+                    :error #(= "error" %)))
 
-(s/def ::indexed (s/or :true true :false false))
+(s/def ::stateMutability #{"pure" "view" "nonpayable" "payable"} #_(s/or :pure #(= "pure" %)
+                                    :view #(= "view" %)
+                                    :nonpayable #(= "nonpayable" %)
+                                    :payable #(= "payable" %)))
 
-(s/def ::inputs (s/coll-of (s/keys :req-un [::internalType ::name ::type])))
+(s/def ::indexed boolean?)
+(s/def ::anonymous boolean?)
+
+(s/def ::inputs (s/coll-of (s/keys :req-un [::internalType ::name]
+                                   :opt-un [::indexed])))
+;-------------
+
+(s/def ::type string?)
+
+;; Dispatch function based on the :type key
+(defmulti type-dispatch :type)
+(defmethod type-dispatch "function" [_] ::function)
+(defmethod type-dispatch "error" [_] ::error)
+(defmethod type-dispatch "event" [_] ::event)
+(defmethod type-dispatch "constructor" [_] ::constructor)
+
+
+;; Define the multi-spec using the dispatch function
+
 
 ;; Define specs for different components of the contract
+;;
+;;
+;;
 ;; Constructor
 (s/def ::constructor
   (s/keys :req-un [::inputs ::stateMutability ::type]))
@@ -57,9 +82,11 @@
 ;; Function
 (s/def ::outputs (s/coll-of (s/keys :req-un [::internalType ::name ::type])))
 (s/def ::function
-  (s/keys :req-un [::inputs ::name ::type ::outputs ::stateMutability]))
+  (s/keys :req-un [::inputs ::name ::type ::outputs ::stateMutability]
+          ;:opt-un [::anonymous]
+          ))
 
-(s/def ::abi-entry (s/or :constructor ::constructor
+(s/def ::abi-entry (s/multi-spec type-dispatch :type) #_(s/or :constructor ::constructor
                          :error ::error
                          :event ::event
                          :function ::function))
@@ -81,7 +108,10 @@
 ; (s/valid? ::function example-function)
 
 (comment
+  (mapv #(s/conform ::abi-entry %) (map-indexed #(let [t (:type %2)]
+                                                   (conj {(keyword (str t "/id")) %1} %2)) token-abi))
+  (s/conform ::abi-entry (last token-abi))
   (s/conform ::abi-entry (first abi))
-  (s/conform ::abi-entry (first abi))
-  (filterv #(s/valid? ::function %) abi)
-  (js/console.log "hi"))
+  (filterv #(s/valid? ::function %) token-abi)
+
+  )

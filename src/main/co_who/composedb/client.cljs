@@ -8,24 +8,24 @@
                    (js/fetch "http://localhost:5173/runtime-composite.json")
                    (.then (fn [response] (.json response))))))
 
-(declare composite)
-(declare cmopose)
-(declare session)
-
-(defn init-client []
-  (def composite {:models {:SimpleProfile {:id "kjzl6hvfrbw6cb1ttgtfyob0aqdxdkprjy598j5rd94ca52kij128y23ede66z5"
+(def composite {:models {:SimpleProfile {:id "kjzl6hvfrbw6cb1ttgtfyob0aqdxdkprjy598j5rd94ca52kij128y23ede66z5"
                                            :accountRelation {:type "single"}}}
                   :objects {:SimpleProfile {:displayName {:type "string" :required true}}}
                   :enums {}
                   :accountData {:simpleProfile {:type "node" :name "SimpleProfile"}}})
 
-  (def compose (ComposeClient. {:ceramic "http://localhost:7007"
-                                :definition (clj->js composite)}))
+(def compose (atom nil))
+(def session (atom nil))
 
-  (def session (js/await (.then (DIDSession.get accountId authMethod {:resources compose.resources})
-                                (fn [session]
-                                  (compose.setDID session.did)
-                                  session)))))
+(defn init-client []
+
+  (reset! compose (ComposeClient. (clj->js {:ceramic "http://localhost:7007"
+                                            :definition (clj->js composite)})))
+
+  (reset! session (.then (DIDSession.get accountId authMethod {:resources compose.resources})
+                         (fn [session]
+                           (compose.setDID session.did)
+                           session))))
 
 #_(def session
     (let [[account-id auth-method] (auth/authenticate-user)

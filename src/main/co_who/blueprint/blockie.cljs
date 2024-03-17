@@ -1,5 +1,5 @@
 (ns co-who.blueprint.blockie
-  (:require ["mr-who/dom" :as dom :refer [img]]
+  (:require [mr-who.dom :as dom :refer [img]]
             ["blockies-ts" :as blockies]
           ))
 
