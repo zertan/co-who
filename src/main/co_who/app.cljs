@@ -42,8 +42,10 @@
 #_(let [cp (new c/Component [:router/id 0] (second (l/landing-comp {})))]
   (cp.render))
 
-(defn ^:dev/after-load  init []
-  (println "init")
+(defn ^:dev/after-load start [] (js/console.log "startaaa"))
+
+(defn init []
+  (println "inita")
   (fb/initFlowbite)
 
   (r/init-routing)

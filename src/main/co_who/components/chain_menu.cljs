@@ -15,7 +15,7 @@
 
 (defn load-blockie [app client]
   (m/merge-comp app blockie-comp {:blockie/id 1
-                                  :address (eu/get-address client)}
+                                  :address (eu/get-address client #(println "addr: " %))}
                 {:f assoc-in :path [:chain-menu/id "1" :blockie]}))
 
 ;(get-address client)
@@ -32,9 +32,9 @@
      (:name c))))
 
 (defn connect-event [app client]
-  (.then (eu/request-addresses client)
-         (fn [r]
-           (swap! app assoc-in [:user/id "1" :address] (first r)))))
+  (eu/request-addresses client
+                        (fn [r]
+                          (swap! app assoc-in [:user/id "1" :address] (first r)))))
 
 (defn connect-button [app client]
   (button "Connect" #(connect-event app client)))

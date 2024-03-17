@@ -25,4 +25,4 @@
 (defn simple-comp []
   (list (fn [] {})
         (fn [] (dom/div {:id :root}
-                        (dom/div {} (str abi))))))
+                        (dom/div {} (str token-abi))))))

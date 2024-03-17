@@ -3,7 +3,6 @@
         town.lilac/pyramid {:mvn/version "3.4.0"}
         metosin/reitit {:mvn/version "0.7.0-alpha7"}
         se.w3t/mr-who {:local/root "../mr-who"}
-        com.google.javascript/closure-compiler-unshaded {:mvn/version "v20230411"}
         }
  :paths ["src/main"]
  :aliases {:build {:extra-paths ["src/build"]}
@@ -11,9 +10,9 @@
            :tools {:extra-deps {org.clojure/tools.namespace {:mvn/version "1.5.0"}
                                 ;mx.cider/tools.deps.enrich-classpath {:mvn/version "1.17.1"}
                                 }}
-           :nrepl {:extra-deps {nrepl/nrepl {:mvn/version "RELEASE"}
-                                cider/cider-nrepl {:mvn/version "0.47.0"}
+           :nrepl {:extra-deps {cider/cider-nrepl {:mvn/version "0.47.0"}
+                                {refactor-nrepl {:mvn/version "3.10.0"}}
                                 cider/piggieback {:mvn/version "0.5.3"}}
                    :main-opts ["-m" "nrepl.cmdline"]}
-           :shadow-cljs {:extra-deps {thheller/shadow-cljs {:mvn/version "2.25.5"}}
+           :shadow-cljs {:extra-deps {thheller/shadow-cljs {:mvn/version "2.26.2"}}
                          :main-opts ["-m" "shadow.cljs.devtools.cli"]}}}

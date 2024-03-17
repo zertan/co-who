@@ -1,6 +1,8 @@
 (ns co-who.evm.util
   (:require ["viem/accounts" :as ac :refer [generatePrivateKey privateKeyToAccount]]))
 
+(set! *warn-on-infer* false)
+
 (defn generate-private-key []
   (generatePrivateKey))
 

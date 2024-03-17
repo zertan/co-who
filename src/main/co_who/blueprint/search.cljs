@@ -1,7 +1,7 @@
 (ns co-who.blueprint.search
   (:require ["mr-who/dom" :as dom]))
 
-(defn search-comp [input submit]
+(defn search-comp []
   (dom/form
       {}
     (dom/label

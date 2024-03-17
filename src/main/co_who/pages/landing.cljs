@@ -55,7 +55,7 @@
                    (m/replace-mutation app [:root :router :route :landing-form :idiv]
                                        (fn [] (input {:id :l-input
                                                       :placeholder ""}
-                                                     d)) [:landing :l-input])))))))
+                                                     d)) [:landing :l-input] {})))))))
 
 (def mutation "mutation CreateSimpleProfile($i: CreateSimpleProfileInput!){
   createSimpleProfile(input: $i){

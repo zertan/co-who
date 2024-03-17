@@ -3,7 +3,7 @@
               [co-who.blueprint.blockie :as b :refer [blockie-comp]]))
 
 (defn event-comp [{:keys [id blockie] :or {id (random-uuid)
-                                                 blockie (:data (blockie-comp))}}]
+                                                 blockie (:data (blockie-comp {}))}}]
   (dom/a {:id id
           :href "#"
           :class "items-center block p-3 sm:flex hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-[#101014]"}
