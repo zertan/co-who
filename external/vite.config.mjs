@@ -9,9 +9,7 @@ export default defineConfig({
     target: 'esnext' //browsers can handle the latest ES features
   },
   server: {
-    watch: {
-      usePolling: true
-    }
+    hmr: false
   },
   plugins: [
      nodePolyfills({ include: ['global', 'stream']  }),

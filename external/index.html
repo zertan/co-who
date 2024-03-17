@@ -2,11 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="node_modules/google-closure-library/closure/goog/base.js"></script>
-  <script src="src/index3.js"></script>
-  <!-- <script src="src/main.js"></script> -->
+  <!-- <script id="index3" type="module" src="src/index.js"></script> -->
+  <script type="module" src="/dist/assets/index-ClxLbXgX.js"></script>
+  <!-- <script type="module" src="/src/main.js"></script> -->
+
+  <script>
+
+    var script2 = document.createElement('script');
+  script2.src = "src/main.js"
+  document.head.appendChild(script2);
+  console.log("hi");
+
+    </script>
+  
   <title>Browser Starter</title>
 </head>
 <body>

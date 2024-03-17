@@ -18,7 +18,7 @@
            [co-who.composedb.client :as cdb]
            ;["./component" :as cs]
            ["flowbite" :as fb]
-           [co-who.evm.abi :refer [abi]]
+           [co-who.evm.abi :refer [token-abi]]
            [co-who.components.evm.smart-contract :as sm])
   #_(:require-macros [co-who.component :as c :refer [dod Component]]))
 
@@ -42,14 +42,14 @@
 #_(let [cp (new c/Component [:router/id 0] (second (l/landing-comp {})))]
   (cp.render))
 
-(defn init []
+(defn ^:dev/after-load  init []
   (println "init")
   (fb/initFlowbite)
 
   (r/init-routing)
 
   #_(cdba/authenticate-user)
-  (let [root-comp (sm/smart-contract abi) #_(main/root-comp {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:remove ["hidden"]})})))
+  (let [root-comp (sm/smart-contract token-abi) #_(main/root-comp {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:remove ["hidden"]})})))
                                                                  :wizard-modal ((first (wm/modal-comp {:close-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:add ["hidden"]})})))
                                                                  :router ((first (rc/router-comp {:id :router
                                                                                                   :route-id :route
@@ -106,7 +106,7 @@
                                                                                                                      :comp comp})]})))})
         ;render ((second root-comp))
         ]
-    (println "<" root-comp)
+    (println "<aa" root-comp)
 
     (println (js/document.getElementById "app"))
     (dom/append-helper (js/document.getElementById "app") (:node (:root root-comp)))

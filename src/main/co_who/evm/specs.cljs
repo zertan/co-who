@@ -37,6 +37,8 @@
                                :nonpayable #(= "nonpayable" %)
                                :payable #(= "payable" %)))
 
+(s/def ::indexed (s/or :true true :false false))
+
 (s/def ::inputs (s/coll-of (s/keys :req-un [::internalType ::name ::type])))
 
 ;; Define specs for different components of the contract

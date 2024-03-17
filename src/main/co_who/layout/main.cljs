@@ -2,7 +2,7 @@
   (:require [mr-who.dom :as dom]
             [co-who.layout.header :as h]
             [co-who.layout.router :as rc]
-            [co-who.evm.abi :refer [abi]]
+            [co-who.evm.abi :refer [token-abi]]
             #_["./footer.mjs" :as f]
             [co-who.layout.wizard-modal :as wm]
             #_["./../mutations.mjs" :as m]))

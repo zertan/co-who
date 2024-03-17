@@ -1,23 +1,25 @@
 ;; shadow-cljs configuration
 {:dev-http
  {8020 "external"}
-
- :builds
- {:main
-  {:target :browser
-   :output-dir "output/src"
-   ;:asset-path "/js"
-   :js-options {:js-provider :external
-                :external-index "external/src/index.js"
-                :allow-nested-packages false}
-   :release    {:compiler-options {:optimizations :advanced}
-                                ;:output-dir "target/"
-                                ;:module-hash-names 8
-                                :output-feature-set :es6
-                                :build-options {:manifest-name "assets.edn"}}
-   :devtools {:after-load co-who.app/init
-              :watch-dir "external"}
-   ;:externs ["@composedb/client"]
-   :modules
-   {:main ; becomes public/js/main.js
-    {:init-fn co-who.app/init}}}}}
+ :nrepl    {:port 9000
+            :host "0.0.0.0"}
+ :builds {:main {:target :browser
+                 :output-dir "external/src"
+                 :http-root "external"
+                 :asset-path "/"
+                                        ;:asset-path "/js"
+                 :js-options {:js-provider :external
+                              :external-index "external/src/index.js"
+                              :external-index-format :esm
+                              :allow-nested-packages false}
+                 :release    {:compiler-options {:optimizations :advanced}
+                                        ;:output-dir "target/"
+                                        ;:module-hash-names 8
+                              :output-feature-set :es6
+                              :build-options {:manifest-name "assets.edn"}}
+                 :devtools {:after-load co-who.app/init
+                            :watch-dir "external/src"}
+                                        ;:externs ["@composedb/client"]
+                 :modules
+                 {:main ; becomes public/js/main.js
+                  {:init-fn co-who.app/init}}}}}

@@ -22,7 +22,12 @@ async function loadLibs() {
   return ALL;
 }
 
-loadLibs().then(function (result) { import("/../output/src/main.js"); });
+loadLibs().then(function (result) {
+  var script2 = document.createElement('script');
+  script2.src = "src/main.js"
+  document.head.appendChild(script2);
+  console.log("hi");
+});
 
 shadow$bridge = function shadow$bridge(name) {
   var ret = ALL[name];
