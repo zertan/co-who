@@ -8,9 +8,9 @@
 (defonce chains (atom nil))
 
 (defn init-client []
-  (reset! wallet-client (createWalletClient (clj->js {:chain mainnet
+  (reset! wallet-client (createWalletClient (clj->js {:chain sepolia
                                                    :transport (custom js/window.ethereum)})))
-  (reset! public-client (createPublicClient (clj->js {:chain mainnet
+  (reset! public-client (createPublicClient (clj->js {:chain sepolia
                                                    :transport (http)})))
 
-  (reset! chains [mainnet hardhat]))
+  (reset! chains [mainnet hardhat sepolia]))

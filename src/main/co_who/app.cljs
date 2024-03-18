@@ -56,14 +56,26 @@
 #_(let [cp (new c/Component [:router/id 0] (second (l/landing-comp {})))]
   (cp.render))
 
+(defn update-abi-entries [app]
+  (filterv #(s/valid? ::es/function %) (let [selected (get-in @app [:smart-contract :selected])]
+                                         (get-in @app [:contract/id selected :abi]))))
+
 (defn render-root []
   (let [root-comp (dom/div {:id :app
-                                        ;:class "bg-black w-screen h-screen text-white dark"
-                            }
+                            :class "bg-black w-screen h-screen text-white dark items-center justify-items-center justify-center"}
                     (sm/smart-contract {:id :smart-contract
                                         :address "0x0"
-                                        :entries (filterv #(s/valid? ::es/function %) abi/token-abi)
-                                        :select-on-change (fn [e] (swap! app assoc-in [:smart-contract :selected] e.target.value))
+                                        :contracts (keys (get @app :contract/id))
+                                        :entries (update-abi-entries app)
+                                        :contract-select-on-change (fn [e] (swap! app assoc-in [:smart-contract :selected-contract] e.target.value))
+                                        :select-on-change (fn [e]
+                                                            (update-abi-entries app)
+                                                            (swap! app assoc-in [:smart-contract :selected] e.target.value)
+                                                            #_(m/replace-mutation app [:smart-contract :topf :sp]
+                                                                                (fn []
+                                                                                  (dom/span {:id :sp
+                                                                                             :class "flex max-w-2/3 gap-2"}
+                                                                                    (d/dropdown-select "Select contract" (mapv #(name %) contracts) contract-select-on-change)))))
                                         :on-click (sm/append-evm-transaction app)
                                         :on-change (in/on-change app [:smart-contract :input])}))
 
@@ -136,7 +148,13 @@
 
 (defn init []
   (println "init")
-  (reset! app (py/db (abi/indexed-abi abi/token-abi)))
+  (reset! app (py/db [{:contract/id :codo
+                       :contract/address "0xF5072f9F13aC7f5C7FED7f306A3CC26CaD6dD652" :contract/chain :sepolia
+                       :contract/abi (abi/indexed-abi abi/token-abi)}
+                      {:contract/id :codo-governor
+                       :contract/address "0x0d4d1e9665a8BF75869A63e3F45AC465Bc291CBB" :contract/chain :sepolia
+                       :contract/abi (abi/indexed-abi abi/governor-abi)}
+                      ]))
 
   (fb/initFlowbite)
 

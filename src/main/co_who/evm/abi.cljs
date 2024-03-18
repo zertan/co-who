@@ -1577,7 +1577,7 @@
     }
   ]")
 
-(def abi (js->clj (.parse js/JSON json) :keywordize-keys true))
+(def governor-abi (js->clj (.parse js/JSON json) :keywordize-keys true))
 
 (def token-json "[
     {
@@ -2553,3 +2553,6 @@
 
 (defn indexed-abi [abi]
   (map #(conj {(keyword (str (:type %1) "/id")) (:name %1)} %1) abi))
+
+(defn indexed-contract [ident abi]
+  (conj (indexed-abi abi) ident))
