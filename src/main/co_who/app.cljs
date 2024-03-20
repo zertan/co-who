@@ -71,19 +71,15 @@
          :where [?e :function/id ?id]]  @app))
 
 (defn render-root []
-  (let [query [{:smart-contract [:id :address :contracts :entries]}]
-        data (sm/transaction-builder true {:id :transaction-builder
+  (let [data (sm/transaction-builder true {:id :transaction-builder
                                            :contracts (py/pull @app [{[:contract/id :codo] [:contract/id :contract/address :contract/chain :contract/name {:contract/abi [:name :type :stateMutability :inputs :outputs]} :stateMutability] }
                                                                      {[:contract/id :codo-governor] [:contract/id :contract/address :contract/chain :contract/name {:contract/abi [:name :type :stateMutability :inputs :outputs]}]}])
-                                           :transactions []}) #_{:id :transaction-builder
-                  :address ""
-                  :contracts (vec (keys (get @app :contract/id)))
-                  :entries (update-abi-entries app :codo)}
+                                           :transactions []})
         local-data {:local/selected [:contract/id :codo]
-                    :local/contract-select-on-change (fn [e] (swap! app assoc-in [:transaction-builder :selected-contract] e.target.value))
+                    :local/contract-select-on-change (fn [e] (swap! app assoc-in [:id :transaction-builder :selected-contract] e.target.value))
                     :local/select-on-change (fn [e]
                                               #_(update-abi-entries app :selected)
-                                              (swap! app assoc-in [:transaction-builder :selected] e.target.value)
+                                              (swap! app assoc-in [:id :transaction-builder :selected] e.target.value)
                                               #_(m/replace-mutation app [:transaction-builder :topf :sp]
                                                                     (fn []
                                                                       (dom/span {:id :sp
@@ -92,33 +88,33 @@
                     :local/on-click (sm/append-evm-transaction app)
                     :local/on-change (in/on-change app [:transaction-builder :input])}
 
-        root-comp (main/root-comp {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:remove ["hidden"]})})))
-                           :wizard-modal ((first (wm/modal-comp {:close-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:add ["hidden"]})})))
-                           :router ((first (rc/router-comp {:id :router
+        root-comp (main/root-comp {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:app :wizard-modal] {:remove ["hidden"]})})))
+                                   :wizard-modal ((first (wm/modal-comp {:close-fn #(m/replace-classes-mutation app [:app :wizard-modal] {:add ["hidden"]})})))
+                                   :router ((first (rc/router-comp {:id :router
                                                             :route-id :route
-                                                            :active-path "/wizards/new-project"
+                                                            :active-path "/transaction-builder"
                                                             :path-children [
                                                                             (let [comp (second (l/landing-comp {:on-click-mut (l/on-click-mut app [:landing :input])
                                                                                                                 :on-change (l/on-change app [:landing :input])
                                                                                                                 :on-click (l/on-click app)}))
                                                                                   path "/"]
                                                                               {:path path
-                                                                               :listener (rc/add-route app [:root :router :route] path comp [:landing])
+                                                                               :listener (rc/add-route app [:app :router :route] path comp [:landing])
                                                                                :comp comp})
                                                                             (let [comp (second (a/activity-comp))
                                                                                   path "/activity"]
                                                                               {:path path
-                                                                               :listener (rc/add-route app [:root :router :route] path comp [:activity])
+                                                                               :listener (rc/add-route app [:app :router :route] path comp [:activity])
                                                                                :comp comp})
                                                                             (let [comp (second (p/profile-comp))
                                                                                   path "/profile"]
                                                                               {:path path
-                                                                               :listener (rc/add-route app [:root :router :route] path comp [:profile])
+                                                                               :listener (rc/add-route app [:app :router :route] path comp [:profile])
                                                                                :comp comp})
-                                                                            (let [comp (sm/transaction-builder (merge data local-data))
+                                                                            (let [comp (fn [] (sm/transaction-builder (merge data local-data)))
                                                                                   path "/transaction-builder"]
                                                                               {:path path
-                                                                               :listener (rc/add-route app [:root :router :route] path comp [:profile])
+                                                                               :listener (rc/add-route app [:app :router :route] path comp [:transaction-builder])
                                                                                :comp comp})
                                                                             (let [comp (second (wzp/project-wizard-comp {:step :info
                                                                                                                          :wizard-router {:id :wizard-router
@@ -127,12 +123,12 @@
                                                                                                                                          :path-children [(let [comp (second (info-step/form-comp))
                                                                                                                                                                path "/wizards/new-project/info"]
                                                                                                                                                            {:path path
-                                                                                                                                                            :listener (rc/add-route app [:root :router :route  :new-project :wzr :wizard-router :wizard-route] path comp [:new-project-info])
+                                                                                                                                                            :listener (rc/add-route app [:app :router :route  :new-project :wzr :wizard-router :wizard-route] path comp [:new-project-info])
                                                                                                                                                             :comp comp})
                                                                                                                                                          (let [comp (second (contract-step/contract-step {}))
                                                                                                                                                                path "/wizards/new-project/contract"]
                                                                                                                                                            {:path path
-                                                                                                                                                            :listener (rc/add-route app [:root :router :route :new-project :wzr :wizard-router :wizard-route] path comp [:new-project-contract])
+                                                                                                                                                            :listener (rc/add-route app [:app :router :route :new-project :wzr :wizard-router :wizard-route] path comp [:new-project-contract])
                                                                                                                                                             :comp comp})]}
                                                                                                                          :stepper {:id "stepper"
                                                                                                                                    :steps [{:id :info
@@ -151,16 +147,18 @@
                                                                                                                                             :icon :cube}]}}))
                                                                                   path "/wizards/new-project"]
                                                                               {:path path
-                                                                               :listener (rc/add-route app [:root :router :route] path comp [:new-project])
+                                                                               :listener (rc/add-route app [:app :router :route] path comp [:new-project])
                                                                                :comp comp})]})))})
-                                        ;render ((second root-comp))
+        render ((second root-comp))
         ]
-    (println "a<aaaaa" ((second root-comp)))
+    (println "a<aaaaa" render)
 
     #_(println (js/document.getElementById "app"))
-    (dom/append-helper (js/document.getElementById "app") (:mr-who/node (:app root-comp )) {:action dom/replace-node})
+    (dom/append-helper (js/document.getElementById "app") (:mr-who/node (:app render )) {:action dom/replace-node})
     #_(swap! app py/add dataa)
-    (swap! app py/add (:app root-comp))
+    (swap! app py/add render)
+    (swap! app py/add ((first root-comp)))
+    (swap! app py/add data)
     ))
 
 (comment
@@ -209,10 +207,10 @@
   (set! (.-draggable js/window) (keys l/interact))
   (eu/add-accounts-changed js/window.ethereum
                            #(let[address (first %)]
-                              (m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0])))
+                              (m/replace-mutation app [:app :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0])))
   (eu/request-addresses client
                         #(let[address (first %)]
-                           (m/replace-mutation app [:root :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0])))
+                           (m/replace-mutation app [:app :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0])))
 
   (let [query ["query {
                 simpleProfile {

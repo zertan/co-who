@@ -54,16 +54,18 @@
 
 (defn transaction [{:keys [] :as data}]
   (dom/div {:class ""}
-           (abi-entry data)
-           (b/button "Transact" (fn [e] (println data)))))
+    (abi-entry data)
+    (b/button "Transact" (fn [e] (println data)))))
 
 (defn append-evm-transaction [app]
   (fn [e]
-    (let [selected (get-in @app [:transaction-builder :selected])
+    (let [selected (get-in @app [:id :transaction-builder :selected])
           data (get-in @app [:function/id selected])]
+      (println selected)
       (println data)
-      (m/append-mutation app [:transaction-builder :topf2 :list :l2]
-                         (fn [] (transaction data)) [] {:use-cache? false}))))
+      (println (get-in  @app [:app :router :route :transaction-builder :topf2 :list :l2]))
+      (m/append-mutation app [:app :router :route :transaction-builder :topf2 :list :l2]
+                         #(transaction data) [] {:use-cache? false}))))
 
 (defn smart-contract [{:contract/keys [id address abi chain name]}
                       {:local/keys [select-on-change on-change on-click selected]}]

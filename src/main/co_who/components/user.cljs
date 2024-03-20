@@ -8,6 +8,6 @@
   (list (fn [] {:user/id :user
                 :address address})
         (fn [] (dom/div {:id :user
-                         :data-popover-target :pop}
+                         :data-popover-target "pop"}
                  (popover-comp :pop address nil
                   (avatar-comp (b/make-blockie address)))))))

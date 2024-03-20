@@ -15,6 +15,7 @@
   (let [cache (if use-cache? (get-in @app (conj ident :cache)))
         render (if cache cache (first (vals (comp))))
         replace-element (get-in @app (conj path :mr-who/node))]
+    (println "R " replace-element)
     (dom/append-helper replace-element (:mr-who/node render))
     (swap! app assoc-in path render)
     (when-not cache

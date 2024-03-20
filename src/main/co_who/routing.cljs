@@ -3,10 +3,10 @@
 
 #_(def n (aget navigo "default"))
 
-(declare router)
+(defonce router (atom nil))
 
 (defn init-routing []
-  (def router (new navigo/default "/" true)))
+  (reset! router (new navigo/default "/" true)))
 
 (defn navigate [r path]
   (r.navigate path))

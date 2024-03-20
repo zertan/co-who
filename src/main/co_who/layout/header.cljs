@@ -2,7 +2,7 @@
   (:require [mr-who.dom :as dom]
             [co-who.utils :as u]
             [co-who.blueprint.search :refer [search-comp]]
-            ;[co-blue.icons :refer [academic-cap]]
+            [co-blue.icons.academic-cap :refer [academic-cap]]
             [co-who.blueprint.button :refer [icon-button]]
             [co-who.components.user :refer [user-comp]]
             [co-who.evm.client :refer [wallet-client chains]]
@@ -33,7 +33,7 @@
                                   :class "flex flex-wrap justify-between items-center mx-auto max-w-screen-xl"}
                           (dom/a  {:id :n2a
                                    :href "#", :class "flex items-center"}
-                                  #_(dom/img  {:id :logo
+                                  (dom/img  {:id :logo
                                              :src logo
                                              :class "mr-3 h-6 sm:h-9"
                                              :alt "Codo Logo"})
@@ -81,5 +81,5 @@
                                      :id "mobile-menu-2"}
                             (dom/ul {:class "flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0"}
                               (doall
-                               (for [t [ ["/" "/"] ["Activity" "/activity"] ["Profile" "/profile"]]]
+                               (for [t [ ["/" "/"] ["Transction Builder" "/transaction-builder"] ["Activity" "/activity"] ["Profile" "/profile"]]]
                                  (list-comp (first t) (second t))))))))))))

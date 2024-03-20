@@ -17,8 +17,4 @@
                             :heading "Create Project"}
                            (dom/div {:class "w-20 h-20"} academic-cap))
                    (c/card {:heading "Get verified"}
-                           (dom/div {:class "w-20 h-20"} academic-cap))
-                   )
-                 
-                 ))))
-
+                           (dom/div {:class "w-20 h-20"} academic-cap)))))))

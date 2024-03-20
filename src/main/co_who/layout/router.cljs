@@ -6,18 +6,19 @@
 ;; add the component render element to the render-app state
 
 (defn add-route [app path route-path comp ident]
-  #_(r/add-route r/router route-path
+  #_(println (js-keys @r/router))
+  (r/add-route @r/router route-path
                #(do (println "run change route: " path)
-                    (m/replace-mutation app path comp ident))))
+                    #_(m/replace-mutation app path comp ident {}))))
 
 #_(let [render (comp)
        replace-element (get-in @app (conj path :node))]
    (dom/replace-node replace-element (:node (first (u/vals render))))
    (swap! app assoc-in path (conj (first (u/vals render)))))
 
-(defn route-comp [comp path app ident]
+#_(defn route-comp [comp path app ident]
   {:path path
-   ;:listener (add-route app (dom/get-dom-paths ident) [] path ident)
+   :listener (add-route app #_(dom/get-dom-paths ident) [] path ident)
    :comp comp})
 
 (defn router-comp [{:keys [id route-id active-path path-children] :or {id :router
