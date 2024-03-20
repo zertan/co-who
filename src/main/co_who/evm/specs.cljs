@@ -52,13 +52,6 @@
 
 (s/def ::type string?)
 
-;; Dispatch function based on the :type key
-(defmulti type-dispatch :type)
-(defmethod type-dispatch "function" [_] ::function)
-(defmethod type-dispatch "error" [_] ::error)
-(defmethod type-dispatch "event" [_] ::event)
-(defmethod type-dispatch "constructor" [_] ::constructor)
-
 
 ;; Define the multi-spec using the dispatch function
 
@@ -85,6 +78,14 @@
   (s/keys :req-un [::inputs ::name ::type ::outputs ::stateMutability]
           ;:opt-un [::anonymous]
           ))
+
+;; Dispatch function based on the :type key
+(defmulti type-dispatch :type)
+(defmethod type-dispatch "function" [_] ::function)
+(defmethod type-dispatch "error" [_] ::error)
+(defmethod type-dispatch "event" [_] ::event)
+(defmethod type-dispatch "constructor" [_] ::constructor)
+
 
 (s/def ::abi-entry (s/multi-spec type-dispatch :type) #_(s/or :constructor ::constructor
                          :error ::error

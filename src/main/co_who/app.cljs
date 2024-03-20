@@ -1,31 +1,32 @@
 (ns co-who.app
   (:require [mr-who.dom :as dom]
-           [co-who.routing :as r]
-           [co-who.layout.main :as main]
-           [co-who.layout.router :as rc]
-           [co-who.layout.header :as hc]
-           [co-who.components.user :refer [user-comp]]
-           [co-who.mutations :as m]
-           [co-who.evm.client :as ec]
-           [co-who.layout.wizard-modal :as wm]
-           [co-who.evm.util :as eu]
-           [co-who.pages.activity :as a]
-           [co-who.pages.landing :as l]
-           [co-who.pages.profile :as p]
-           [co-who.components.wizards.project.main :as wzp]
-           [co-who.components.wizards.project.info :as info-step]
-           [co-who.components.wizards.project.contract-step :as contract-step]
-           [co-who.composedb.client :as cdb]
-           [co-who.composedb.auth :as cdba]
-           [cljs.spec.alpha :as s]
+            [co-who.routing :as r]
+            [co-who.layout.main :as main]
+            [co-who.layout.router :as rc]
+            [co-who.layout.header :as hc]
+            [co-who.components.user :refer [user-comp]]
+            [co-who.mutations :as m]
+            [co-who.evm.client :as ec]
+            [co-who.layout.wizard-modal :as wm]
+            [co-who.evm.util :as eu]
+            [co-who.pages.activity :as a]
+            [co-who.pages.landing :as l]
+            [co-who.pages.profile :as p]
+            [co-who.components.wizards.project.main :as wzp]
+            [co-who.components.wizards.project.info :as info-step]
+            [co-who.components.wizards.project.contract-step :as contract-step]
+            [co-who.composedb.client :as cdb]
+            [co-who.composedb.auth :as cdba]
                                         ;["./component" :as cs]
-           ["flowbite" :as fb]
-           [pyramid.core :as py]
-           [co-who.evm.abi :as abi]
-           [co-who.evm.specs :as es]
-           [co-who.blueprint.input :as in]
-           [gadget.inspector :as inspector]
-           [co-who.components.evm.smart-contract :as sm])
+            ["flowbite" :as fb]
+            [pyramid.core :as py]
+            [pyramid.query :as pq]
+            [co-who.evm.abi :as abi]
+
+            [co-who.blueprint.input :as in]
+            [gadget.inspector :as inspector]
+            [co-who.components.evm.smart-contract :as sm]
+            [cljs.spec.alpha :as s])
   #_(:require-macros [co-who.component :as c :refer [dod Component]]))
 
 (defn deep-merge [& maps]
@@ -36,7 +37,6 @@
          maps))
 
 (defonce app (atom {}))
-(defonce data (atom {}))
 
 ;;;;;;;;;;;;aaaaaaaaaaaaaaa
                                         ;(c/dod asd (+ 1 1 21))
@@ -56,28 +56,44 @@
 #_(let [cp (new c/Component [:router/id 0] (second (l/landing-comp {})))]
   (cp.render))
 
-(defn update-abi-entries [app]
-  (filterv #(s/valid? ::es/function %) (let [selected (get-in @app [:smart-contract :selected])]
-                                         (get-in @app [:contract/id selected :abi]))))
+(defn update-abi-entries [app selected]
+  (py/pull @app [{[:contract/id :codo] [{:contract/abi [:function/id]}]}])
+
+  (py/pull @app [{:contract/id [:contract/address]}])
+
+  (py/pull @app [[:contract/id :codo] [:contract/id :codo-governor]])
+
+  )
+
+(comment
+  (pq/q
+        [:find ?id
+         :where [?e :function/id ?id]]  @app))
 
 (defn render-root []
-  (let [root-comp (dom/div {:id :app
+  (let [query [{:smart-contract [:id :address :contracts :entries]}]
+        data (sm/transaction-builder true {:id :transaction-builder
+                                           :contracts (py/pull @app [{[:contract/id :codo] [:contract/id :contract/address :contract/chain :contract/name {:contract/abi [:name :type :stateMutability :inputs :outputs]} :stateMutability] }
+                                                                     {[:contract/id :codo-governor] [:contract/id :contract/address :contract/chain :contract/name {:contract/abi [:name :type :stateMutability :inputs :outputs]}]}])
+                                           :transactions []}) #_{:id :transaction-builder
+                  :address ""
+                  :contracts (vec (keys (get @app :contract/id)))
+                  :entries (update-abi-entries app :codo)}
+        local-data {:local/selected [:contract/id :codo]
+                    :local/contract-select-on-change (fn [e] (swap! app assoc-in [:transaction-builder :selected-contract] e.target.value))
+                    :local/select-on-change (fn [e]
+                                              #_(update-abi-entries app :selected)
+                                              (swap! app assoc-in [:transaction-builder :selected] e.target.value)
+                                              #_(m/replace-mutation app [:transaction-builder :topf :sp]
+                                                                    (fn []
+                                                                      (dom/span {:id :sp
+                                                                                 :class "flex max-w-2/3 gap-2"}
+                                                                                (d/dropdown-select "Select contract" (mapv #(name %) contracts) contract-select-on-change)))))
+                    :local/on-click (sm/append-evm-transaction app)
+                    :local/on-change (in/on-change app [:transaction-builder :input])}
+        root-comp (dom/div {:id :app
                             :class "bg-black w-screen h-screen text-white dark items-center justify-items-center justify-center"}
-                    (sm/smart-contract {:id :smart-contract
-                                        :address "0x0"
-                                        :contracts (keys (get @app :contract/id))
-                                        :entries (update-abi-entries app)
-                                        :contract-select-on-change (fn [e] (swap! app assoc-in [:smart-contract :selected-contract] e.target.value))
-                                        :select-on-change (fn [e]
-                                                            (update-abi-entries app)
-                                                            (swap! app assoc-in [:smart-contract :selected] e.target.value)
-                                                            #_(m/replace-mutation app [:smart-contract :topf :sp]
-                                                                                (fn []
-                                                                                  (dom/span {:id :sp
-                                                                                             :class "flex max-w-2/3 gap-2"}
-                                                                                    (d/dropdown-select "Select contract" (mapv #(name %) contracts) contract-select-on-change)))))
-                                        :on-click (sm/append-evm-transaction app)
-                                        :on-change (in/on-change app [:smart-contract :input])}))
+                           (sm/transaction-builder (merge data local-data)))
 
         #_(main/root-comp {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:remove ["hidden"]})})))
                            :wizard-modal ((first (wm/modal-comp {:close-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:add ["hidden"]})})))
@@ -136,22 +152,30 @@
                                                                                :comp comp})]})))})
                                         ;render ((second root-comp))
         ]
-    #_(println "<aaaaa" root-comp)
+    #_(println "a<aaaaa" root-comp)
 
     #_(println (js/document.getElementById "app"))
     (dom/append-helper (js/document.getElementById "app") (:mr-who/node (:app root-comp )) {:action dom/replace-node})
+    #_(swap! app py/add dataa)
     (swap! app py/add (:app root-comp))
     ))
+
+(comment
+  (let [data (get-in @app [:id :transaction-builder])
+        root-comp (dom/div {:id :app
+                            :class "bg-black w-screen h-screen text-white dark items-center justify-items-center justify-center"}
+                           (sm/transaction-builder (merge data )))]
+    (dom/append-helper (js/document.getElementById "app") (:mr-who/node (:app root-comp )) {:action dom/replace-node})))
 
 (defn ^:dev/after-load start []
   (render-root))
 
 (defn init []
   (println "init")
-  (reset! app (py/db [{:contract/id :codo
+  (reset! app (py/db [{:contract/id :codo :contract/name "Codo"
                        :contract/address "0xF5072f9F13aC7f5C7FED7f306A3CC26CaD6dD652" :contract/chain :sepolia
                        :contract/abi (abi/indexed-abi abi/token-abi)}
-                      {:contract/id :codo-governor
+                      {:contract/id :codo-governor :contract/name "Codo Governor"
                        :contract/address "0x0d4d1e9665a8BF75869A63e3F45AC465Bc291CBB" :contract/chain :sepolia
                        :contract/abi (abi/indexed-abi abi/governor-abi)}
                       ]))
@@ -172,7 +196,9 @@
 (comment
 
 
-  (let [selected (get-in @app [:smart-contract :selected])
+(get-in @app [:contract/id :codo :contract/abi])
+
+  (let [selected (get-in @app [:transaction-builder :selected])
         data (get-in @app [:function/id selected])]
     [selected
      data])
