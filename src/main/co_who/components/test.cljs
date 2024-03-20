@@ -1,5 +1,5 @@
 (ns co-who.components.test
-  (:require ["mr-who/dom" :as dom]
+  (:require [mr-who.dom :as dom]
             ["mr-who/utils" :as u]))
 
 (defn counter-comp [{:keys [value on-click] :or {value 0

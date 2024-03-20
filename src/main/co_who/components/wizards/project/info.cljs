@@ -1,5 +1,5 @@
 (ns co-who.components.wizards.project.info
-    (:require ["mr-who/dom" :as dom :refer [div p button]]))
+    (:require [mr-who.dom :as dom :refer [div p button]]))
 
 (defn form-comp []
   (list (fn [] {})

@@ -1,5 +1,5 @@
 (ns co-who.blueprint.chart
-  (:require ["mr-who/dom" :as dom]))
+  (:require [mr-who.dom :as dom]))
 
 (defn chart-comp []
   (dom/div

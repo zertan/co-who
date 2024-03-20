@@ -1,6 +1,6 @@
 (ns co-who.blueprint.pagination
   (:require [clojure.string :as string]
-            ["mr-who/dom" :as dom]))
+            [mr-who.dom :as dom]))
 
 
 (defn tab-thing [text]

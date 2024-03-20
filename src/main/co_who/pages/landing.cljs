@@ -1,5 +1,5 @@
 (ns co-who.pages.landing
-  (:require ["mr-who/dom" :as dom]
+  (:require [mr-who.dom :as dom]
             #_["@shopify/draggable" :refer [Draggable]]
             #_["@interactjs/interact" :as intr]
             #_["@interactjs/actions/drag"]
@@ -44,8 +44,9 @@
   }
 }")
 
-#_(defn on-change [app ident]
-  (reset! app ))
+(defn on-change [app ident]
+  (println "ch")
+  #_(reset! app ))
 
 (defn on-click [app]
   (fn [e]

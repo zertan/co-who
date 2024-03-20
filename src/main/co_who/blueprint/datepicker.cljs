@@ -1,7 +1,6 @@
 (ns co-who.blueprint.datepicker
   (:require ["flowbite-datepicker" :refer [Datepicker]]
-            ["mr-who/dom" :as dom]
-            ["mr-who/render" :as render]))
+            [mr-who.dom :as dom]))
 
 (defn init-datepicker [node]
   (Datepicker. node {:dark nil

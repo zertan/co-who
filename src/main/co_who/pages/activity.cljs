@@ -1,5 +1,5 @@
 (ns co-who.pages.activity
-  (:require ["mr-who/dom" :as dom]
+  (:require [mr-who.dom :as dom]
             [co-who.blueprint.blockie :refer [blockie-comp]]
             [co-who.blueprint.timeline :refer [timeline-comp]]
             ["mr-who/utils" :as u]

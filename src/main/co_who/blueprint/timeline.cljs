@@ -1,5 +1,5 @@
 (ns co-who.blueprint.timeline
-    (:require ["mr-who/dom" :as dom]
+    (:require [mr-who.dom :as dom]
               [co-who.blueprint.blockie :as b :refer [blockie-comp]]))
 
 (defn event-comp [{:keys [id blockie] :or {id (random-uuid)

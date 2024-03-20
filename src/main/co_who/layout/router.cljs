@@ -1,5 +1,5 @@
 (ns co-who.layout.router
-  (:require ["mr-who/dom" :as dom]
+  (:require [mr-who.dom :as dom]
             [co-who.routing :as r]
             [co-who.mutations :as m]))
 

@@ -1,5 +1,5 @@
 (ns co-who.layout.header
-  (:require ["mr-who/dom" :as dom]
+  (:require [mr-who.dom :as dom]
             [co-who.utils :as u]
             [co-who.blueprint.search :refer [search-comp]]
             ["co-blue/icons" :refer [academic-cap]]
@@ -33,11 +33,10 @@
                                   :class "flex flex-wrap justify-between items-center mx-auto max-w-screen-xl"}
                           (dom/a  {:id :n2a
                                    :href "#", :class "flex items-center"}
-                                  (constantly
-                                   (dom/img  {:id :logo
-                                              :src logo
-                                              :class "mr-3 h-6 sm:h-9"
-                                              :alt "Codo Logo"}))
+                                  #_(dom/img  {:id :logo
+                                             :src logo
+                                             :class "mr-3 h-6 sm:h-9"
+                                             :alt "Codo Logo"})
                             #_(dom/span  {:class "self-center text-xl font-semibold whitespace-nowrap dark:text-white"}
                                 "Codo"))
                           (dom/div  {:id :n3

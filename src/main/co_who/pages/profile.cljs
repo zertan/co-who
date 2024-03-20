@@ -1,5 +1,5 @@
 (ns co-who.pages.profile
-  (:require ["mr-who/dom" :as dom]))
+  (:require [mr-who.dom :as dom]))
 
 (defn profile-comp []
   (list (fn [] {})

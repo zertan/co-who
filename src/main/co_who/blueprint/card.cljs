@@ -1,5 +1,5 @@
 (ns co-who.blueprint.card
-  (:require ["mr-who/dom" :as dom]))
+  (:require [mr-who.dom :as dom]))
 
 (defn card [{:keys [heading href] :as props} & children]
   (dom/a

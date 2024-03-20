@@ -1,5 +1,5 @@
 (ns co-who.layout.footer
-  (:require ["mr-who/dom" :as dom]
+  (:require [mr-who.dom :as dom]
             [co-who.blueprint.modal :refer [modal]]
             [co-who.mutations :as m]))
 

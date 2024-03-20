@@ -91,16 +91,14 @@
                                                                                 (d/dropdown-select "Select contract" (mapv #(name %) contracts) contract-select-on-change)))))
                     :local/on-click (sm/append-evm-transaction app)
                     :local/on-change (in/on-change app [:transaction-builder :input])}
-        root-comp (dom/div {:id :app
-                            :class "bg-black w-screen h-screen text-white dark items-center justify-items-center justify-center"}
-                           (sm/transaction-builder (merge data local-data)))
 
-        #_(main/root-comp {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:remove ["hidden"]})})))
+        root-comp (main/root-comp {:header ((first (hc/header-comp {:modal-open-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:remove ["hidden"]})})))
                            :wizard-modal ((first (wm/modal-comp {:close-fn #(m/replace-classes-mutation app [:root :wizard-modal] {:add ["hidden"]})})))
                            :router ((first (rc/router-comp {:id :router
                                                             :route-id :route
                                                             :active-path "/wizards/new-project"
-                                                            :path-children [(let [comp (second (l/landing-comp {:on-click-mut (l/on-click-mut app [:landing :input])
+                                                            :path-children [
+                                                                            (let [comp (second (l/landing-comp {:on-click-mut (l/on-click-mut app [:landing :input])
                                                                                                                 :on-change (l/on-change app [:landing :input])
                                                                                                                 :on-click (l/on-click app)}))
                                                                                   path "/"]
@@ -117,6 +115,11 @@
                                                                               {:path path
                                                                                :listener (rc/add-route app [:root :router :route] path comp [:profile])
                                                                                :comp comp})
+                                                                            (let [comp (sm/transaction-builder (merge data local-data))
+                                                                                  path "/transaction-builder"]
+                                                                              {:path path
+                                                                               :listener (rc/add-route app [:root :router :route] path comp [:profile])
+                                                                               :comp comp})
                                                                             (let [comp (second (wzp/project-wizard-comp {:step :info
                                                                                                                          :wizard-router {:id :wizard-router
                                                                                                                                          :route-id :wizard-route
@@ -126,7 +129,7 @@
                                                                                                                                                            {:path path
                                                                                                                                                             :listener (rc/add-route app [:root :router :route  :new-project :wzr :wizard-router :wizard-route] path comp [:new-project-info])
                                                                                                                                                             :comp comp})
-                                                                                                                                                         (let [comp (second (contract-step/contract-step))
+                                                                                                                                                         (let [comp (second (contract-step/contract-step {}))
                                                                                                                                                                path "/wizards/new-project/contract"]
                                                                                                                                                            {:path path
                                                                                                                                                             :listener (rc/add-route app [:root :router :route :new-project :wzr :wizard-router :wizard-route] path comp [:new-project-contract])
@@ -152,7 +155,7 @@
                                                                                :comp comp})]})))})
                                         ;render ((second root-comp))
         ]
-    #_(println "a<aaaaa" root-comp)
+    (println "a<aaaaa" ((second root-comp)))
 
     #_(println (js/document.getElementById "app"))
     (dom/append-helper (js/document.getElementById "app") (:mr-who/node (:app root-comp )) {:action dom/replace-node})

@@ -1,6 +1,5 @@
 (ns co-who.components.user
-    (:require ["mr-who/dom" :as dom]
-              ["mr-who/utils" :as u]
+    (:require [mr-who.dom :as dom]
               [co-who.blueprint.avatar :refer [avatar-comp]]
               [co-who.blueprint.popover :refer [popover-comp]]
               [co-who.blueprint.blockie :as b :refer [blockie-comp]]))

@@ -1,5 +1,5 @@
 (ns co-who.components.wizards.project.main
-  (:require ["mr-who/dom" :as dom :refer [div p button]]
+  (:require [mr-who.dom :as dom :refer [div p button]]
             [co-who.layout.router :as rc]
             [co-who.blueprint.stepper :refer [stepper-comp]]))
 

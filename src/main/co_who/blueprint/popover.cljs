@@ -1,6 +1,5 @@
 (ns co-who.blueprint.popover
-  (:require ["mr-who/dom" :as dom :refer [img]]
-            ["mr-who/utils" :as u]))
+  (:require [mr-who.dom :as dom :refer [img]]))
 
 (defn popover-comp [id title extra & children]
   (dom/div {}

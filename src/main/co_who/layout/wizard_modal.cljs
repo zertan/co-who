@@ -1,5 +1,5 @@
 (ns co-who.layout.wizard-modal
-  (:require ["mr-who/dom" :as dom]
+  (:require [mr-who.dom :as dom]
             ["co-blue/icons" :refer [academic-cap]]
             [co-who.blueprint.modal :refer [modal]]
             [co-who.blueprint.card :as c]
