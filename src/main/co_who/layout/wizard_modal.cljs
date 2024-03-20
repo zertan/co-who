@@ -1,9 +1,8 @@
 (ns co-who.layout.wizard-modal
   (:require [mr-who.dom :as dom]
-            ["co-blue/icons" :refer [academic-cap]]
+            [co-blue.icons.academic-cap :refer [academic-cap]]
             [co-who.blueprint.modal :refer [modal]]
-            [co-who.blueprint.card :as c]
-            [co-who.mutations :as m]))
+            [co-who.blueprint.card :as c]))
 
 (defn modal-comp [{:keys [close-fn hidden?] :or {close-fn #(println %)
                                                  hidden? true}}]

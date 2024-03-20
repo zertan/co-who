@@ -1,6 +1,8 @@
 (ns co-who.blueprint.stepper
     (:require [mr-who.dom :as dom :refer [div p button li ol span h3 a]]
-              ["co-blue/icons" :as i :refer [check clipboard-document-list cube]]))
+              [co-blue.icons.check :refer [check cube]]
+              [co-blue.icons.clipboard-document-list :refer [clipboard-document-list cube]]
+              [co-blue.icons.cube :refer [cube]]))
 
 (def icon-map {:check check
                :clipboard-document-list clipboard-document-list

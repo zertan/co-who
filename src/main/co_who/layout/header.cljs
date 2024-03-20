@@ -2,7 +2,7 @@
   (:require [mr-who.dom :as dom]
             [co-who.utils :as u]
             [co-who.blueprint.search :refer [search-comp]]
-            ["co-blue/icons" :refer [academic-cap]]
+            ;[co-blue.icons :refer [academic-cap]]
             [co-who.blueprint.button :refer [icon-button]]
             [co-who.components.user :refer [user-comp]]
             [co-who.evm.client :refer [wallet-client chains]]

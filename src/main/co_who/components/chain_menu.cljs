@@ -3,7 +3,7 @@
             [co-who.blueprint.blockie :refer [blockie-comp]]
             [co-who.blueprint.button :refer [button]]
             [co-who.evm.util :as eu]
-            ["mr-who/mutations" :as m]
+            [mr-who.mutations :as m]
             ;["../blueprint/icons/web3" :refer [ethereum polygon optimism arbitrum hardhat]]
             ))
 

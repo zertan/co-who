@@ -1,8 +1,7 @@
 (ns co-who.blueprint.modal
   (:require [mr-who.dom :as dom :refer [div button img]]
-            [mr-who.utils :as u]
             [co-who.blueprint.button :refer [icon-button]]
-            ["co-blue/icons" :refer [x-mark]]))
+            [co-blue.icons.x-mark :refer [x-mark]]))
 
 (defn modal [{:keys [id on-close hidden?] :as props} & children]
   (div {:id id
