@@ -37,6 +37,7 @@
          maps))
 
 (defonce app (atom {}))
+(defonce render (atom {}))
 
 ;;;;;;;;;;;;aaaaaaaaaaaaaaa
                                         ;(c/dod asd (+ 1 1 21))
@@ -76,10 +77,10 @@
                                                                      {[:contract/id :codo-governor] [:contract/id :contract/address :contract/chain :contract/name {:contract/abi [:name :type :stateMutability :inputs :outputs]}]}])
                                            :transactions []})
         local-data {:local/selected [:contract/id :codo]
-                    :local/contract-select-on-change (fn [e] (swap! app assoc-in [:id :transaction-builder :selected-contract] e.target.value))
+                    :local/contract-select-on-change (fn [e] (m/set-value! app [:id :transaction-builder :selected-contract] (key e.target.value)))
                     :local/select-on-change (fn [e]
                                               #_(update-abi-entries app :selected)
-                                              (swap! app assoc-in [:id :transaction-builder :selected] e.target.value)
+                                              (swap! app assoc-in [:id :transaction-builder :selected] (key e.target.value))
                                               #_(m/replace-mutation app [:transaction-builder :topf :sp]
                                                                     (fn []
                                                                       (dom/span {:id :sp
@@ -151,7 +152,7 @@
                                                                                :comp comp})]})))})
         render ((second root-comp))
         ]
-    (println "a<aaaaa" render)
+    #_(println "a<aaaaa" render)
 
     #_(println (js/document.getElementById "app"))
     (dom/append-helper (js/document.getElementById "app") (:mr-who/node (:app render )) {:action dom/replace-node})
@@ -192,12 +193,21 @@
   (ec/init-client)
   #_(cdb/init-client)
 
-  (inspector/inspect "App state" app))
+  (inspector/inspect "App state" app)
+
+  (eu/add-accounts-changed js/window.ethereum
+                           #(let[address (first %)]
+                              (m/replace-mutation app [:app :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0] {})))
+  (eu/request-addresses @ec/wallet-client
+                        #(let[address (first %)]
+                           (m/replace-mutation app [:app :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0] {}))))
 
 (comment
 
 
-(get-in @app [:contract/id :codo :contract/abi])
+(py/pull @app [:contract/id (get-in @app [:id :transaction-builder :selected-contract])])
+
+  (get-in @app [:contract/id :codo :contract/abi])
 
   (let [selected (get-in @app [:transaction-builder :selected])
         data (get-in @app [:function/id selected])]
@@ -205,12 +215,7 @@
      data])
 
   (set! (.-draggable js/window) (keys l/interact))
-  (eu/add-accounts-changed js/window.ethereum
-                           #(let[address (first %)]
-                              (m/replace-mutation app [:app :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0])))
-  (eu/request-addresses client
-                        #(let[address (first %)]
-                           (m/replace-mutation app [:app :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0])))
+
 
   (let [query ["query {
                 simpleProfile {

@@ -34,7 +34,7 @@
         (fn []
           (dom/div {:id id}
             (dom/div {:id route-id
-                      :class "max-w-screen-xl mt-4"}
+                      :class "max-w-screen-xl mt-4 items-center justify-items-center justify-center"}
               ((:comp
                 (first
                  (filterv #(= active-path (:path %)) path-children)))))))))

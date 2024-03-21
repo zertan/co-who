@@ -9,7 +9,8 @@
 
 (defn init-client []
   (reset! wallet-client (createWalletClient (clj->js {:chain sepolia
-                                                   :transport (custom js/window.ethereum)})))
+                                                      :account "0xa8172E99effDA57900e09150f37Fea5860b806B4"
+                                                      :transport (custom js/window.ethereum)})))
   (reset! public-client (createPublicClient (clj->js {:chain sepolia
                                                    :transport (http)})))
 

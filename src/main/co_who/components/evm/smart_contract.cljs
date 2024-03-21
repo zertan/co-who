@@ -6,80 +6,105 @@
             [co-who.mutations :as m]
             [co-who.blueprint.label :as l]
             [co-who.evm.specs :as es]
-            [cljs.spec.alpha :as s]))
+            [co-who.evm.client :as ec]
+            [co-who.evm.lib :as el]
+            [cljs.spec.alpha :as s]
+            [pyramid.core :as py]))
 
-(defn address-input [{:keys [name address] :as data :or {name "Address" address "0x0"}}]
-  (println data)
+(defn address-input [{:keys [name value] :as data :or {name "Address"
+                                                       value "0x0"}}
+                     {:local/keys [on-change]}]
   (i/input {:id "nunu"
             :label (str name)
             :place-holder "0x..."
-                                        ;:on-change on-change
-            } address))
+            :on-change on-change
+            } value))
 
-(defn number-input [{:keys [name value] :or {name "Value" value 0}}]
+(defn number-input [{:keys [name value] :or {name "Value" value 0}}
+                    {:local/keys [on-change]}]
   (i/number-input {
             :label name
             :placeholder "0x..."
-            ;:on-change on-change
+            :on-change on-change
             } value))
 
-(defn input [{:keys [internalType type name] :as entry}]
+(defn input [{:keys [internalType type name value] :as entry}
+             {:local/keys [on-change] :as local}]
   (dom/div {}
            (condp = type
-             "address" (address-input entry)
-             "uint256" (number-input entry)
-             "uint8" (number-input entry)
-             "uint48" (number-input entry)
+             "address" (address-input entry local)
+             "uint256" (number-input entry local)
+             "uint8" (number-input entry local)
+             "uint48" (number-input entry local)
              (str entry))))
 
-(defn function-comp [{:keys [function/id name inputs outputs stateMutability type] :as data}]
+(defn function-comp [{:keys [function/id name inputs outputs stateMutability type] :as data}
+                     {:local/keys [on-change] :as local}]
   (dom/div {}
            (l/label (str  "Name: " name))
            (l/label (str  "Inputs:"))
            (for [entry inputs]
-             (input entry))
+             (input entry local))
            (l/label (str  "Outputs:"))
            (for [entry outputs]
-             (input entry))))
+             (input entry local))))
 
-(defn abi-entry [data]
-  (dom/div {:class ""}
-           (condp = (:type data)
-             "function" (function-comp data)
-             "constructor" ""
-             "error" ""
-             "event" ""
-             :cljs.spec.alpha/invalid "inv"
-             "default")))
+(defn abi-entry-input [app ident value]
+  (swap! app update-in (conj ident :value) value))
 
-(defn transaction [{:keys [] :as data}]
+(defn abi-entry [ident data & local]
   (dom/div {:class ""}
-    (abi-entry data)
-    (b/button "Transact" (fn [e] (println data)))))
+    (condp = (:type data)
+      "function" (function-comp data local)
+      "constructor" ""
+      "error" ""
+      "event" ""
+      :cljs.spec.alpha/invalid "inv"
+      "default")))
+
+(defn execute-transaction [{:contract/keys [abi address]}
+                           {:keys [function/id type inputs name outputs stateMutability] :as data}]
+  (fn [e]
+    (let [c (el/get-contract (clj->js {:address address
+                                       :abi (clj->js abi)
+                                       :client (clj->js {:public @ec/public-client :wallet @ec/wallet-client})}))
+          cf (if (= stateMutability "view") c.read c.write)
+          function (aget cf id)
+          args (mapv #(:value %) inputs)]
+      (.then (function (clj->js args)) #(println %)))))
+
+(defn set-transaction-field [app ident value]
+  (swap! app update-in (conj ident :value) value)
+  #_(m/replace-mutation app ident #() value)
+  )
+
+(defn transaction [{:keys [id] :as data :or {id (random-uuid)}} {:local/keys [execute-fn] :as local}]
+  (println "e" execute-fn)
+  (dom/form {:class ""}
+    (abi-entry data {:local/on-change-id [:transaction/id id]})
+    (b/button "Transact" (execute-fn data))))
 
 (defn append-evm-transaction [app]
   (fn [e]
     (let [selected (get-in @app [:id :transaction-builder :selected])
-          data (get-in @app [:function/id selected])]
-      (println selected)
-      (println data)
-      (println (get-in  @app [:app :router :route :transaction-builder :topf2 :list :l2]))
+          contract (py/pull @app [:contract/id (get-in @app [:id :transaction-builder :selected-contract])])
+          data (get-in @app [:function/id selected])
+          ]
       (m/append-mutation app [:app :router :route :transaction-builder :topf2 :list :l2]
-                         #(transaction data) [] {:use-cache? false}))))
+                         #(transaction data {:local/execute-fn (execute-transaction contract data)}) [] {:use-cache? false}))))
 
 (defn smart-contract [{:contract/keys [id address abi chain name]}
                       {:local/keys [select-on-change on-change on-click selected]}]
   (dom/span {:class "flex w-full gap-2"}
-            (i/input {:id :address
-                      :label "Address"
-                      :placeholder "0x..."
-                      :on-change on-change} address)
-            (d/dropdown-select "Select function" (mapv #(:name %)
-                                                       (filterv #(s/valid? ::es/function %) abi)) select-on-change)
-
-            (dom/div {:style {:paddng-top "20px"
-                              :height "20px"}}
-                     (b/button "Add" on-click))))
+    (i/input {:id :address
+              :label "Address"
+              :placeholder "0x..."
+              :on-change on-change} address)
+    (d/dropdown-select "Select function" (mapv #(:name %)
+                                               (filterv #(s/valid? ::es/function %) abi)) select-on-change)
+    (dom/div {:style {:paddng-top "20px"
+                      :height "20px"}}
+      (b/button "Add" on-click))))
 
 (defn transaction-builder ([return-data {:keys [id contracts transactions] :as data
                                          :local/keys [on-click on-change select-on-change
@@ -97,9 +122,11 @@
             (dom/div {:id :topf
                       :class "flex flex-col"}
                      (dom/span {:id :sp
-                                :class "flex w-full gap-2"}
-                               (d/dropdown-select "Select contract" (mapv #(:contract/name %) (vals contracts)) contract-select-on-change))
-                     (smart-contract (get contracts selected) #:local{:on-click on-click :on-change on-change :select-on-change select-on-change}))
+                                :class "flex w-full gap-2 mb-6"}
+                       (d/dropdown-select "Select contract" (mapv (fn [c] {:ident [:contract/id (:contract/id c)]
+                                                                           :value (:contract/name c)}) (vals contracts)) contract-select-on-change))
+                     (smart-contract (get contracts selected)
+                                     #:local{:on-click on-click :on-change on-change :select-on-change select-on-change}))
             (dom/div {:id :topf2
                       :class "flex flex-col :col-start-2"}
                      (dom/h1 {:class "mb-2"} "Transactions")
@@ -110,5 +137,6 @@
                                         :class "position-relative overflow-y-auto overflow-x-hidden flex max-h-64"}
                                        (if transactions
                                          (for [t transactions]
-                                           (transaction t))
+                                           (let [contract (get contracts selected)]
+                                             (transaction t {:local/execute-fn (execute-transaction contract t)})))
                                          "")))))))

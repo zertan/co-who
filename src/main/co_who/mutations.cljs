@@ -107,3 +107,6 @@
                                                     render-id render)}))
         #_(println @app)
         [((first comp)) render])))
+
+(defn set-value! [app path value]
+  (swap! app assoc-in path value))

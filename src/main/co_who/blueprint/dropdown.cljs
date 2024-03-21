@@ -37,25 +37,17 @@
                    {:href "#" :class "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"}
                  l))))))))
 
-(defn on-change [app ident]
-  (fn  [e]
-    (swap! app assoc-in ident e.target.value)))
-
-
 (defn dropdown-select [title items on-change]
-  (dom/form
-      {:class "max-w-sm mx-auto"}
-      (dom/label
-          {:for "countries",
-           :class
-           "block mb-2 text-sm font-medium text-gray-900 dark:text-white"}
+  (dom/div {:class ""}
+      (dom/label {:for "countries"
+                  :class "block mb-2 text-sm font-medium text-gray-900 dark:text-white"}
         title)
-      (dom/select
-       {:id "countries",
-        :on-change on-change
-        :class
-        "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"}
-       (for [item items]
-         (dom/option {:selected nil} item))
+      (dom/select {:id "countries"
+                   :on-change on-change
+                   :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
+                           focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+                           dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"}
+                  (map-indexed (fn [i {:keys [value] :as item}]
+                                 (dom/option {:selected (= i 0)} value) ) items)
        ))
   )
