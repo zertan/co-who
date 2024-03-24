@@ -83,7 +83,14 @@
                     {:ident ident
                      :query [:dropdown/id {:dropdown/items [:ident :value]}]}
                     local
-                    (fn [{:dropdown/keys [items] :as data} {:local/keys [label on-change] :as local}]
+                    (fn [ident
+                         {:dropdown/keys [id selected items] :or {id (random-uuid)
+                                                                  selected 0
+                                                                  items []} :as data}
+                         {:local/keys [label on-change] :or {label "Select"
+
+                                                             on-change (fn [e]
+                                                                                  (swap! app assoc-in ident e.target.value))} :as local}]
                       (dom/div {:id (str ident)
                                 :class ""}
                                (dom/label {:for "countries"
@@ -97,10 +104,6 @@
                                            (for [{:keys [value]} items]
                                              (dom/option {:selected ""} (str value))))))))
 
-#_(defn merge-component! [app render comp]
-  (render-fn )
-  )
-
 (defn init-components [app render components]
   (let [watcher-fn (fn [render components]
                      (fn [_key _atom old new] ;;do diff here
@@ -112,9 +115,7 @@
 
   (do
     (def r (dropdown-select co-who.app/app [:dropdown/id 0]
-                            {:local/label "Select contract"
-                             :local/on-change (fn [e]
-                                                (swap! co-who.app/app assoc-in [:some/id 0] {:some/id 0 :some/more "cool2"}))}))
+                            {:local/label "Select contract"}))
 
     (swap! co-who.app/app py/add {:dropdown/id 0 :dropdown/items [{:ident [{[:contract/id :codo] [:contract/name]}]
                                                                    :value "Codaaoaaaaaaaaaaa"}
