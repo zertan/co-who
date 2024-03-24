@@ -22,7 +22,7 @@
             [pyramid.core :as py]
             [pyramid.query :as pq]
             [co-who.evm.abi :as abi]
-
+            [co-who.component :as c]
             [co-who.blueprint.input :as in]
             [gadget.inspector :as inspector]
             [co-who.components.evm.smart-contract :as sm]
@@ -162,13 +162,6 @@
     (swap! app py/add data)
     ))
 
-(comment
-  (let [data (get-in @app [:id :transaction-builder])
-        root-comp (dom/div {:id :app
-                            :class "bg-black w-screen h-screen text-white dark items-center justify-items-center justify-center"}
-                           (sm/transaction-builder (merge data )))]
-    (dom/append-helper (js/document.getElementById "app") (:mr-who/node (:app root-comp )) {:action dom/replace-node})))
-
 (defn ^:dev/after-load start []
   (render-root))
 
@@ -194,6 +187,7 @@
   #_(cdb/init-client)
 
   (inspector/inspect "App state" app)
+  (inspector/inspect "Render state" render)
 
   (eu/add-accounts-changed js/window.ethereum
                            #(let[address (first %)]
