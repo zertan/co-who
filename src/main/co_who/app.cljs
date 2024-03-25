@@ -37,7 +37,7 @@
          maps))
 
 (defonce app (atom {}))
-(defonce render (atom {}))
+(defonce render-state (atom {}))
 
 ;;;;;;;;;;;;aaaaaaaaaaaaaaa
                                         ;(c/dod asd (+ 1 1 21))
@@ -77,7 +77,7 @@
                                                                      {[:contract/id :codo-governor] [:contract/id :contract/address :contract/chain :contract/name {:contract/abi [:name :type :stateMutability :inputs :outputs]}]}])
                                            :transactions []})
         local-data {:local/selected [:contract/id :codo]
-                    :local/contract-select-on-change (fn [e] (m/set-value! app [:id :transaction-builder :selected-contract] (key e.target.value)))
+                    :local/contract-select-on-change (fn [e] (m/set-value! app [:id :transaction-builder :selected] (keyword e.target.value)))
                     :local/select-on-change (fn [e]
                                               #_(update-abi-entries app :selected)
                                               (swap! app assoc-in [:id :transaction-builder :selected] (key e.target.value))
@@ -162,11 +162,48 @@
     (swap! app py/add data)
     ))
 
+(comment
+  (get (py/pull @app [{[:id :transaction-builder] [:id {:contracts [:contract/id :contract/address :contract/chain :contract/name {:contract/abi [:name :type :stateMutability :inputs :outputs]} :stateMutability]} :transactions]}])
+       [:id :transaction-builder]))
+
+(defn render-2 [first?]
+  (let [data (if first?
+               (sm/transaction-builder true {:id :transaction-builder
+                                             :contracts (vals (py/pull @app [{[:contract/id :codo] [:contract/id :contract/address :contract/chain :contract/name {:contract/abi [:name :type :stateMutability :inputs :outputs]} :stateMutability] }
+                                                                             {[:contract/id :codo-governor] [:contract/id :contract/address :contract/chain :contract/name {:contract/abi [:name :type :stateMutability :inputs :outputs]}]}]))
+                                             :transactions []})
+               (get (py/pull @app [{[:id :transaction-builder] [:id {:contracts [:contract/id :contract/address :contract/chain :contract/name {:contract/abi [:name :type :stateMutability :inputs :outputs]} :stateMutability]} :transactions]}])
+       [:id :transaction-builder]))
+        local-data {:local/selected-contract [:contract/id :codo]
+                    :local/contract-select-on-change (fn [e] (m/set-value! app [:id :transaction-builder :selected-contract] (keyword e.target.value)))
+                    :local/select-on-change (fn [e]
+                                              #_(update-abi-entries app :selected)
+                                              (swap! app assoc-in [:id :smart-contract :selected-function] (keyword e.target.value))
+                                              #_(m/replace-mutation app [:transaction-builder :topf :sp]
+                                                                    (fn []
+                                                                      (dom/span {:id :sp
+                                                                                 :class "flex max-w-2/3 gap-2"}
+                                                                                (d/dropdown-select "Select contract" (mapv #(name %) contracts) contract-select-on-change)))))
+                    :local/on-click (sm/append-evm-transaction app)
+                    :local/on-change (in/on-change app [:transaction-builder :input])}
+
+        header (hc/header-comp {})
+        render (dom/div {:id :app
+                         :class "bg-black w-screen h-screen text-white dark"}
+                        ((second header))
+                        (sm/transaction-builder (merge data local-data)))
+
+        element (if first? (js/document.getElementById "app") (js/document.getElementById "transaction-builder"))]
+
+    (dom/append-helper element (:mr-who/node (:app render)) {:action dom/replace-node})
+    (swap! render-state py/add render)
+    (swap! app py/add (merge data ((first header))))))
+
 (defn ^:dev/after-load start []
-  (render-root))
+  (render-2 false))
 
 (defn init []
-  (println "init")
+  (println "init");
   (reset! app (py/db [{:contract/id :codo :contract/name "Codo"
                        :contract/address "0xF5072f9F13aC7f5C7FED7f306A3CC26CaD6dD652" :contract/chain :sepolia
                        :contract/abi (abi/indexed-abi abi/token-abi)}
@@ -181,20 +218,21 @@
 
   #_(cdba/authenticate-user)
 
-  (start)
+
+  (render-2 true)
 
   (ec/init-client)
   #_(cdb/init-client)
 
   (inspector/inspect "App state" app)
-  (inspector/inspect "Render state" render)
+  (inspector/inspect "Render state" render-state)
 
   (eu/add-accounts-changed js/window.ethereum
                            #(let[address (first %)]
-                              (m/replace-mutation app [:app :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0] {})))
+                              (m/replace-mutation render-state [:app :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0] {})))
   (eu/request-addresses @ec/wallet-client
                         #(let[address (first %)]
-                           (m/replace-mutation app [:app :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0] {}))))
+                           (m/replace-mutation render-state [:app :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0] {}))))
 
 (comment
 

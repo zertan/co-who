@@ -38,105 +38,140 @@
              "uint48" (number-input entry local)
              (str entry))))
 
+
+(defn set-abi-field [path value]
+  (swap! co-who.app/app assoc-in (conj path :value) value)
+  #_(m/replace-mutation app ident #() value)
+  )
+
+
 (defn function-comp [{:keys [function/id name inputs outputs stateMutability type] :as data}
                      {:local/keys [on-change] :as local}]
   (dom/div {}
            (l/label (str  "Name: " name))
            (l/label (str  "Inputs:"))
-           (for [entry inputs]
-             (input entry local))
+           (map-indexed (fn [i entry]
+                          (input entry {:local/on-change (fn [e]
+                                                           (set-abi-field [:function/id id :inputs i] e.target.value))}))
+                        inputs)
            (l/label (str  "Outputs:"))
-           (for [entry outputs]
-             (input entry local))))
+           (map-indexed (fn [i entry]
+                          (input entry {:local/on-change (fn [e]
+                                                           (set-abi-field [:function/id id :inputs i] e.target.value))}))
+                        outputs)))
 
-(defn abi-entry-input [app ident value]
+#_(defn abi-entry-input [app ident value]
   (swap! app update-in (conj ident :value) value))
 
-(defn abi-entry [ident data & local]
+
+(defn abi-entry [data & local]
   (dom/div {:class ""}
-    (condp = (:type data)
-      "function" (function-comp data local)
-      "constructor" ""
-      "error" ""
-      "event" ""
-      :cljs.spec.alpha/invalid "inv"
-      "default")))
+           (condp = (:type data)
+             "function" (function-comp data local)
+             "constructor" ""
+             "error" ""
+             "event" ""
+             :cljs.spec.alpha/invalid "inv"
+             "default")))
 
 (defn execute-transaction [{:contract/keys [abi address]}
-                           {:keys [function/id type inputs name outputs stateMutability] :as data}]
+                           transaction-id
+                           #_{:keys [function/id type inputs name outputs stateMutability] :as data}]
   (fn [e]
-    (let [c (el/get-contract (clj->js {:address address
+    (let [{:keys [function/id type inputs name outputs stateMutability] :as data} (get-in @co-who.app/app (get-in @co-who.app/app (conj transaction-id :transaction/function)))
+          c (el/get-contract (clj->js {:address address
                                        :abi (clj->js abi)
                                        :client (clj->js {:public @ec/public-client :wallet @ec/wallet-client})}))
           cf (if (= stateMutability "view") c.read c.write)
-          function (aget cf id)
+          function (aget cf name)
           args (mapv #(:value %) inputs)]
+      (println "tr id: " (get-in @co-who.app/app (conj transaction-id :transaction/function)))
+      (println "data: " data)
+      (println "inputs: " inputs)
+      (println "args " (str args))
       (.then (function (clj->js args)) #(println %)))))
 
-(defn set-transaction-field [app ident value]
-  (swap! app update-in (conj ident :value) value)
-  #_(m/replace-mutation app ident #() value)
-  )
+(defn transaction [{:transaction/keys [id function] :as data :or {id (random-uuid)
+                                                                  function nil}} {:local/keys [execute-fn] :as local}]
+  (list (fn [] data)
+        (fn [] (dom/form {:class ""}
+                        (abi-entry function {:local/on-change-id [:transaction/id id]})
+                        (b/button "Transact" #(execute-fn data))))))
 
-(defn transaction [{:keys [id] :as data :or {id (random-uuid)}} {:local/keys [execute-fn] :as local}]
-  (println "e" execute-fn)
-  (dom/form {:class ""}
-    (abi-entry data {:local/on-change-id [:transaction/id id]})
-    (b/button "Transact" (execute-fn data))))
+(comment
+  (let [app co-who.app/app
+        selected (get-in @co-who.app/app [:id :smart-contract :selected-function])
+        ident [:contract/id (keyword (clojure.string/lower-case (name (get-in @co-who.app/app [:id :transaction-builder :selected-contract]))))]
+        contract (get-in @co-who.app/app ident)
+        function-data (get-in @app [:function/id (name selected)])
+        transaction-data {:transaction/id (random-uuid)
+                          :transaction/function (assoc-in function-data [:function/id] (random-uuid))}
+        tr (transaction transaction-data {:local/execute-fn (execute-transaction contract )})
+        ]
+    ((first tr)))
+
+
+  )
 
 (defn append-evm-transaction [app]
   (fn [e]
-    (let [selected (get-in @app [:id :transaction-builder :selected])
-          contract (py/pull @app [:contract/id (get-in @app [:id :transaction-builder :selected-contract])])
-          data (get-in @app [:function/id selected])
+    (let [selected (get-in @app [:id :smart-contract :selected-function])
+          ident [:contract/id (keyword (clojure.string/lower-case (name (get-in @app [:id :transaction-builder :selected-contract]))))]
+          contract (get-in @co-who.app/app ident)
+          function-data (get-in @app [:function/id (name selected)])
+          transaction-data {:transaction/id (random-uuid)
+                            :transaction/function (assoc-in function-data [:function/id] (random-uuid))}
+          tr (transaction transaction-data {:local/execute-fn (execute-transaction contract [:transaction/id (:transaction/id transaction-data)])})
           ]
-      (m/append-mutation app [:app :router :route :transaction-builder :topf2 :list :l2]
-                         #(transaction data {:local/execute-fn (execute-transaction contract data)}) [] {:use-cache? false}))))
+      (swap! app py/add ((first tr)))
+      (m/append-mutation co-who.app/render-state [:app :transaction-builder :topf2 :list :l2]
+                         (second tr) [] {:use-cache? false}))))
 
 (defn smart-contract [{:contract/keys [id address abi chain name]}
-                      {:local/keys [select-on-change on-change on-click selected]}]
+                      {:local/keys [select-on-change on-change on-click selected-function]}]
   (dom/span {:class "flex w-full gap-2"}
-    (i/input {:id :address
-              :label "Address"
-              :placeholder "0x..."
-              :on-change on-change} address)
-    (d/dropdown-select "Select function" (mapv #(:name %)
-                                               (filterv #(s/valid? ::es/function %) abi)) select-on-change)
-    (dom/div {:style {:paddng-top "20px"
-                      :height "20px"}}
-      (b/button "Add" on-click))))
+            (i/input {:id :address
+                      :label "Address"
+                      :placeholder "0x..."
+                      :on-change on-change} address)
+            (d/dropdown-select "Select function" (mapv (fn [a]
+                                                         {:ident "none"
+                                                          :value (:name a)})
+                                                       (filterv #(s/valid? ::es/function %) abi)) select-on-change)
+            (dom/div {:style {:paddng-top "20px"
+                              :height "20px"}}
+                     (b/button "Add" on-click))))
 
 (defn transaction-builder ([return-data {:keys [id contracts transactions] :as data
                                          :local/keys [on-click on-change select-on-change
-                                                      contract-select-on-change selected] :or {id "none"
-                                                                                               contracts []
-                                                                                               transactions []}}]
+                                                      contract-select-on-change selected-contract] :or {id "none"
+                                                      contracts []
+                                                      transactions []}}]
                            data)
   ([{:keys [id contracts transactions] :as data
      :local/keys [on-click on-change select-on-change
-                  contract-select-on-change selected] :or {id "none"
-                                                           contracts []
-                                                           transactions []}}]
-   (dom/div {:id id
-             :class "max-w-4xl flex flex-col  grid grid-cols-2 gap-16"}
-            (dom/div {:id :topf
-                      :class "flex flex-col"}
-                     (dom/span {:id :sp
-                                :class "flex w-full gap-2 mb-6"}
-                       (d/dropdown-select "Select contract" (mapv (fn [c] {:ident [:contract/id (:contract/id c)]
-                                                                           :value (:contract/name c)}) (vals contracts)) contract-select-on-change))
-                     (smart-contract (get contracts selected)
-                                     #:local{:on-click on-click :on-change on-change :select-on-change select-on-change}))
-            (dom/div {:id :topf2
-                      :class "flex flex-col :col-start-2"}
-                     (dom/h1 {:class "mb-2"} "Transactions")
-                     (dom/div {:id :list
-                               :class "dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 w-full
+                  contract-select-on-change selected-contract] :or {id "none"
+                  transactions []}}]
+   (let [contract (first (filterv (fn [c] (= selected-contract [:contract/id (:contract/id c)])) contracts))]
+     (dom/div {:id id
+               :class "max-w-4xl flex flex-col  grid grid-cols-2 gap-16"}
+              (dom/div {:id :topf
+                        :class "flex flex-col"}
+                       (dom/span {:id :sp
+                                  :class "flex w-full gap-2 mb-6"}
+                                 (d/dropdown-select "Select contract" (mapv (fn [c] {:ident [:contract/id (:contract/id c)]
+                                                                                     :value (:contract/name c)}) contracts) contract-select-on-change))
+                       (smart-contract contract
+                                       #:local{:on-click on-click :on-change on-change :select-on-change select-on-change}))
+              (dom/div {:id :topf2
+                        :class "flex flex-col :col-start-2"}
+                       (dom/h1 {:class "mb-2"} "Transactions")
+                       (dom/div {:id :list
+                                 :class "dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 w-full
                         dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 p-4 text-md rounded-lg overflow-hidden"}
-                              (dom/div {:id :l2
-                                        :class "position-relative overflow-y-auto overflow-x-hidden flex max-h-64"}
-                                       (if transactions
-                                         (for [t transactions]
-                                           (let [contract (get contracts selected)]
-                                             (transaction t {:local/execute-fn (execute-transaction contract t)})))
-                                         "")))))))
+                                (dom/div {:id :l2
+                                          :class "position-relative overflow-y-auto overflow-x-hidden flex max-h-64"}
+                                         (if transactions
+                                           (for [t transactions]
+                                             (transaction t {:local/execute-fn (execute-transaction contract t)}))
+                                           ""))))))))

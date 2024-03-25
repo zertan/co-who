@@ -11,15 +11,15 @@
       (swap! app assoc-in (conj ident :cache) render))
     (js/console.log @app)))
 
-(defn append-mutation [app path comp ident {:keys [use-cache?] :or {use-cache? true}}]
-  (let [cache (if use-cache? (get-in @app (conj ident :cache)))
+(defn append-mutation [render-state path comp ident {:keys [use-cache?] :or {use-cache? true}}]
+  (let [cache (if use-cache? (get-in @render-state (conj ident :cache)))
         render (if cache cache (first (vals (comp))))
-        replace-element (get-in @app (conj path :mr-who/node))]
+        replace-element (get-in @render-state (conj path :mr-who/node))]
     (println "R " replace-element)
     (dom/append-helper replace-element (:mr-who/node render))
-    (swap! app assoc-in path render)
+    (swap! render-state assoc-in path render)
     (when-not cache
-      (swap! app assoc-in (conj ident :cache) render))))
+      (swap! render-state assoc-in (conj ident :cache) render))))
 
 
 (defn replace-primitive-mutation [app path primitive ident]

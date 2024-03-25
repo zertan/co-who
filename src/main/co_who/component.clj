@@ -4,7 +4,7 @@
 (defmacro dod [n & body]
    `(defn ~(symbol n) [] (println "a") ~@body))
 
-(defmacro defc [n args ident-query & dom-tree]
+#_(defmacro defc [n args ident-query & dom-tree]
   (list 'defclass (symbol n)
         (list 'extends 'Component)
         (list 'constructor [`this]
@@ -35,3 +35,4 @@
 
 #_(defn landing-comp-factory [comp-class ident query render-fn]
   (new comp-class ident query render-fn))
+(defmacro defc [])

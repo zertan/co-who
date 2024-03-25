@@ -6,7 +6,7 @@
   (fn  [e]
     (swap! app assoc-in ident e.target.value)))
 
-(defn input [{:keys [id label placeholder on-submit on-change required?]} children]
+(defn input [{:keys [id label placeholder on-submit on-change required?] :or {required? false}} children]
   (dom/div {:id id
             :class "mb-6"}
     (l/label label)

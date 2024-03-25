@@ -2,7 +2,7 @@
   (:require [pyramid.core :as py]
             [mr-who.dom :as dom]
             [co-who.blueprint.dropdown :as d])
-  #_(:require-macros [co-who.component :refer [dod]]))
+  (:require-macros [co-who.component :refer [defc]]))
 
 #_(defclass Component
 
@@ -78,31 +78,53 @@
        (let [{:keys [app ident query local render]} comp]
          (render (get (py/pull @app [{ident query}]) ident) @local))))))
 
-(defn dropdown-select [app ident local]
-  (component-render app
-                    {:ident ident
-                     :query [:dropdown/id {:dropdown/items [:ident :value]}]}
-                    local
-                    (fn [ident
+(defn dropdown-select-helper [app]
+  (fn [data local]
+    (component-render app
+                      {:ident [:dropdown/id id]
+                       :query [:dropdown/id {:dropdown/items [:ident :value]}]}
+                      local
+                      (fn [{:dropdown/keys [id selected items] :or {id (random-uuid)
+                                                                    selected 0
+                                                                    items []} :as data}
+                           {:local/keys [label on-change] :or {label "Select"
+                                                               on-change (fn [e]
+                                                                           (swap! app assoc-in ident e.target.value))} :as local}]
+                        (dom/div {:id (str ident)
+                                  :class ""}
+                                 (dom/label {:for "countries"
+                                             :class "block mb-2 text-sm font-medium text-gray-900 dark:text-white"}
+                                            label)
+                                 (dom/select {:id "countries"
+                                              :on-change on-change
+                                              :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
+                           focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+                           dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"}
+                                             (for [{:keys [value]} items]
+                                               (dom/option {:selected ""} (str value)))))))))
+
+(defn dropdown-select [data local]
+  ((dropdown-select-helper app) data local))
+
+#_(defc dropdown-select [app ident
                          {:dropdown/keys [id selected items] :or {id (random-uuid)
                                                                   selected 0
                                                                   items []} :as data}
                          {:local/keys [label on-change] :or {label "Select"
-
                                                              on-change (fn [e]
-                                                                                  (swap! app assoc-in ident e.target.value))} :as local}]
-                      (dom/div {:id (str ident)
-                                :class ""}
-                               (dom/label {:for "countries"
-                                           :class "block mb-2 text-sm font-medium text-gray-900 dark:text-white"}
-                                          label)
-                               (dom/select {:id "countries"
-                                            :on-change on-change
-                                            :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
+                                                                         (swap! app assoc-in ident e.target.value))} :as local}]
+      (dom/div {:id (str ident)
+                :class ""}
+               (dom/label {:for "countries"
+                           :class "block mb-2 text-sm font-medium text-gray-900 dark:text-white"}
+                          label)
+               (dom/select {:id "countries"
+                            :on-change on-change
+                            :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
                            focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
                            dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"}
-                                           (for [{:keys [value]} items]
-                                             (dom/option {:selected ""} (str value))))))))
+                           (for [{:keys [value]} items]
+                             (dom/option {:selected ""} (str value))))))
 
 (defn init-components [app render components]
   (let [watcher-fn (fn [render components]
@@ -111,10 +133,12 @@
                        (mapv #(render-fn render %) (vals @components))))]
     (add-watch app :watch (watcher-fn render components))))
 
+(dropdown-select-helper )
+
 (comment
 
   (do
-    (def r (dropdown-select co-who.app/app [:dropdown/id 0]
+    (def r (dropdown-select [:dropdown/id 0]
                             {:local/label "Select contract"}))
 
     (swap! co-who.app/app py/add {:dropdown/id 0 :dropdown/items [{:ident [{[:contract/id :codo] [:contract/name]}]
