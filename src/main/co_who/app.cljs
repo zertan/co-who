@@ -1,8 +1,8 @@
 (ns co-who.app
   (:require [mr-who.dom :as dom]
-            [co-who.routing :as r]
+            #_[co-who.routing :as r]
             [co-who.layout.main :as main]
-            [co-who.layout.router :as rc]
+            #_[co-who.layout.router :as rc]
             [co-who.layout.header :as hc]
             [co-who.components.user :refer [user-comp]]
             [co-who.mutations :as m]
@@ -71,7 +71,7 @@
         [:find ?id
          :where [?e :function/id ?id]]  @app))
 
-(defn render-root []
+#_(defn render-root []
   (let [data (sm/transaction-builder true {:id :transaction-builder
                                            :contracts (py/pull @app [{[:contract/id :codo] [:contract/id :contract/address :contract/chain :contract/name {:contract/abi [:name :type :stateMutability :inputs :outputs]} :stateMutability] }
                                                                      {[:contract/id :codo-governor] [:contract/id :contract/address :contract/chain :contract/name {:contract/abi [:name :type :stateMutability :inputs :outputs]}]}])
@@ -214,7 +214,7 @@
 
   (fb/initFlowbite)
 
-  (r/init-routing)
+  #_(r/init-routing)
 
   #_(cdba/authenticate-user)
 

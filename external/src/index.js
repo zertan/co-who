@@ -1,13 +1,12 @@
 import * as i0 from "blockies-ts";
 import * as i1 from "did-session";
-import * as i2 from "navigo";
-import * as i3 from "flowbite";
-import * as i4 from "@didtools/pkh-ethereum";
-import * as i5 from "@composedb/client";
-import * as i6 from "flowbite-datepicker";
-import * as i7 from "viem/chains";
-import * as i8 from "viem";
-import * as i9 from "viem/accounts";
+import * as i2 from "flowbite";
+import * as i3 from "@didtools/pkh-ethereum";
+import * as i4 from "@composedb/client";
+import * as i5 from "flowbite-datepicker";
+import * as i6 from "viem/chains";
+import * as i7 from "viem";
+import * as i8 from "viem/accounts";
 
 const ALL = {};
 
@@ -24,18 +23,16 @@ ALL["blockies-ts"] = i0;
 
 ALL["did-session"] = i1;
 
-ALL["navigo"] = i2;
+ALL["flowbite"] = i2;
 
-ALL["flowbite"] = i3;
+ALL["@didtools/pkh-ethereum"] = i3;
 
-ALL["@didtools/pkh-ethereum"] = i4;
+ALL["@composedb/client"] = i4;
 
-ALL["@composedb/client"] = i5;
+ALL["flowbite-datepicker"] = i5;
 
-ALL["flowbite-datepicker"] = i6;
+ALL["viem/chains"] = i6;
 
-ALL["viem/chains"] = i7;
+ALL["viem"] = i7;
 
-ALL["viem"] = i8;
-
-ALL["viem/accounts"] = i9;
+ALL["viem/accounts"] = i8;

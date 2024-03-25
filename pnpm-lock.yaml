@@ -26,9 +26,6 @@ dependencies:
   mr-who:
     specifier: link:../mr-who
     version: link:../mr-who
-  navigo:
-    specifier: ^8.11.1
-    version: 8.11.1
   viem:
     specifier: ^2.7.14
     version: 2.7.14
@@ -2738,10 +2735,6 @@ packages:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
-
-  /navigo@8.11.1:
-    resolution: {integrity: sha512-e3sc1UzakF+bWquC8/dbPCgo7LgPEW1ekgwb4pmEcl8tOc/I7lML8r7HBql+b0VRk7tJWTZqtkeObwJAVR1pxg==}
-    dev: false
 
   /nist-weierstrauss@1.6.1:
     resolution: {integrity: sha512-FpjCOnPV/s3ZVIkeldCVSml2K4lruabPbBgoEitpCK1JL0KTVoWb56CFTU6rZn5i6VqAjdwcOp0FDwJACPmeFA==}

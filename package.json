@@ -40,7 +40,6 @@
     "flowbite-datepicker": "^1.2.6",
     "google-closure-library": "^20230802.0.0",
     "mr-who": "link:../mr-who",
-    "navigo": "^8.11.1",
     "viem": "^2.7.14"
   }
 }
