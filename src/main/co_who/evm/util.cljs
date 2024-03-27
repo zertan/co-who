@@ -1,5 +1,6 @@
 (ns co-who.evm.util
-  (:require ["viem/accounts" :as ac :refer [generatePrivateKey privateKeyToAccount]]))
+  (:require ["viem" :refer [parseEther]]
+            ["viem/accounts" :as ac :refer [generatePrivateKey privateKeyToAccount]]))
 
 (set! *warn-on-infer* false)
 
@@ -25,3 +26,6 @@
 
 (defn add-accounts-changed [ethereum f]
   (add-listener ethereum "accountsChanged" f))
+
+(defn parse-ether [value]
+  (parseEther value))

@@ -2,7 +2,7 @@
   (:require [mr-who.dom :as dom]))
 
 (defn search-comp []
-  (dom/form
+  (dom/div
       {}
     (dom/label
         {:for "default-search",

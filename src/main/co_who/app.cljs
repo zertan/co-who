@@ -205,7 +205,7 @@
 (defn init []
   (println "init");
   (reset! app (py/db [{:contract/id :codo :contract/name "Codo"
-                       :contract/address "0xF5072f9F13aC7f5C7FED7f306A3CC26CaD6dD652" :contract/chain :sepolia
+                       :contract/address "0x1Ed3c3b6DFb4756c03CCBCBC5407E73682B6E3Db" :contract/chain :sepolia
                        :contract/abi (abi/indexed-abi abi/token-abi)}
                       {:contract/id :codo-governor :contract/name "Codo Governor"
                        :contract/address "0x0d4d1e9665a8BF75869A63e3F45AC465Bc291CBB" :contract/chain :sepolia
@@ -227,7 +227,7 @@
   (inspector/inspect "App state" app)
   (inspector/inspect "Render state" render-state)
 
-  (eu/add-accounts-changed js/window.ethereum
+  #_(eu/add-accounts-changed js/window.ethereum
                            #(let[address (first %)]
                               (m/replace-mutation render-state [:app :header :n :n2 :n3 :user] (second (user-comp {:address address})) [:user 0] {})))
   (eu/request-addresses @ec/wallet-client

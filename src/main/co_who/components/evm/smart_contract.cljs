@@ -9,7 +9,8 @@
             [co-who.evm.client :as ec]
             [co-who.evm.lib :as el]
             [cljs.spec.alpha :as s]
-            [pyramid.core :as py]))
+            [pyramid.core :as py]
+            [co-who.evm.util :as eu]))
 
 (defn address-input [{:keys [name value] :as data :or {name "Address"
                                                        value "0x0"}}
@@ -24,9 +25,20 @@
                     {:local/keys [on-change]}]
   (i/number-input {
             :label name
-            :placeholder "0x..."
+            :placeholder 0
             :on-change on-change
             } value))
+
+(defn set-abi-field-fn [path value & convert-fn]
+  (swap! co-who.app/app assoc-in (conj path :value) value))
+
+
+(defn convert-input-filter [input]
+  (condp = type
+    "address" str
+    "uin256" (eu/parse-ether (:value input))
+    "uin8" (eu/parse-ether (:value input))
+    "uin48" (eu/parse-ether (:value input))))
 
 (defn input [{:keys [internalType type name value] :as entry}
              {:local/keys [on-change] :as local}]
@@ -37,13 +49,6 @@
              "uint8" (number-input entry local)
              "uint48" (number-input entry local)
              (str entry))))
-
-
-(defn set-abi-field [path value]
-  (swap! co-who.app/app assoc-in (conj path :value) value)
-  #_(m/replace-mutation app ident #() value)
-  )
-
 
 (defn function-comp [{:keys [function/id name inputs outputs stateMutability type] :as data}
                      {:local/keys [on-change] :as local}]
@@ -60,10 +65,6 @@
                                                            (set-abi-field [:function/id id :inputs i] e.target.value))}))
                         outputs)))
 
-#_(defn abi-entry-input [app ident value]
-  (swap! app update-in (conj ident :value) value))
-
-
 (defn abi-entry [data & local]
   (dom/div {:class ""}
            (condp = (:type data)
@@ -75,16 +76,16 @@
              "default")))
 
 (defn execute-transaction [{:contract/keys [abi address]}
-                           transaction-id
-                           #_{:keys [function/id type inputs name outputs stateMutability] :as data}]
+                           transaction-id]
   (fn [e]
-    (let [{:keys [function/id type inputs name outputs stateMutability] :as data} (get-in @co-who.app/app (get-in @co-who.app/app (conj transaction-id :transaction/function)))
+    (let [data (get-in @co-who.app/app (get-in @co-who.app/app (conj transaction-id :transaction/function)))
+          {:keys [function/id type inputs name outputs stateMutability] :as data} data
           c (el/get-contract (clj->js {:address address
                                        :abi (clj->js abi)
                                        :client (clj->js {:public @ec/public-client :wallet @ec/wallet-client})}))
           cf (if (= stateMutability "view") c.read c.write)
           function (aget cf name)
-          args (mapv #(:value %) inputs)]
+          args (mapv #(convert-input-filter %) inputs)]
       (println "tr id: " (get-in @co-who.app/app (conj transaction-id :transaction/function)))
       (println "data: " data)
       (println "inputs: " inputs)
@@ -94,24 +95,9 @@
 (defn transaction [{:transaction/keys [id function] :as data :or {id (random-uuid)
                                                                   function nil}} {:local/keys [execute-fn] :as local}]
   (list (fn [] data)
-        (fn [] (dom/form {:class ""}
+        (fn [] (dom/div {:class ""}
                         (abi-entry function {:local/on-change-id [:transaction/id id]})
-                        (b/button "Transact" #(execute-fn data))))))
-
-(comment
-  (let [app co-who.app/app
-        selected (get-in @co-who.app/app [:id :smart-contract :selected-function])
-        ident [:contract/id (keyword (clojure.string/lower-case (name (get-in @co-who.app/app [:id :transaction-builder :selected-contract]))))]
-        contract (get-in @co-who.app/app ident)
-        function-data (get-in @app [:function/id (name selected)])
-        transaction-data {:transaction/id (random-uuid)
-                          :transaction/function (assoc-in function-data [:function/id] (random-uuid))}
-        tr (transaction transaction-data {:local/execute-fn (execute-transaction contract )})
-        ]
-    ((first tr)))
-
-
-  )
+                        (b/button "Transact" execute-fn)))))
 
 (defn append-evm-transaction [app]
   (fn [e]
@@ -129,7 +115,7 @@
 
 (defn smart-contract [{:contract/keys [id address abi chain name]}
                       {:local/keys [select-on-change on-change on-click selected-function]}]
-  (dom/span {:class "flex w-full gap-2"}
+  (dom/div {:class "flex w-full gap-2"}
             (i/input {:id :address
                       :label "Address"
                       :placeholder "0x..."
