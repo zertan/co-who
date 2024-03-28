@@ -14,7 +14,8 @@
                  :release    {:compiler-options {:optimizations :advanced}
                               :output-feature-set :es6
                               :build-options {:manifest-name "assets.edn"}}
-                 :devtools   {:watch-dir "public"}
+                 :devtools   {:watch-dir "public"
+                              :ignore-warnings true}
                  :modules
                  {:main ; becomes public/js/main.js
                   {:init-fn co-who.app/init}}}}}

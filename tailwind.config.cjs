@@ -2,24 +2,22 @@ const colors = require('tailwindcss/colors')
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./public/index.html",
-    "./public/js/*.{js,ts,jsx,tsx,mjs}",
-    "./public/js/**/*.{js,ts,jsx,tsx,mjs}",
-    "./node_modules/flowbite/**/*.js"
-  ],
+  content: process.env.NODE_ENV == 'production' ? ["./public/js/main.js","./public.index.html","./node_modules/flowbite/**/*.{js,jsx,ts,tsx}", "./public/js/cljs-runtime/community.codo*.{js,jsx,ts,tsx}", "./node_modules/flowbite-datepicker/dist/**/*.js"] : ["./node_modules/flowbite/**/*.{js,jsx,ts,tsx}", "./public/js/cljs-runtime/co_who*.{js,jsx,ts,tsx}", "./public/js/cljs-runtime/*flowbite*"],
+
   theme: {
-  colors: {
-      gray: colors.coolGray,
-      blue: colors.lightBlue,
-      red: colors.rose,
-      pink: colors.fuchsia,
-    },
     fontFamily: {
-      sans: ['Graphik', 'sans-serif'],
+      sans: ['Montserrat', 'sans-serif'],
       serif: ['Merriweather', 'serif'],
     },
-    extend: {},
+    extend: {
+      colors: {
+        'gray-600': '#1E1E25',
+        'gray-700': '#101014',
+        'gray-800': '#080708',
+        'blue-700': '#4FA1FF',
+      },
+
+    },
   },
   plugins: [
     require('flowbite/plugin')({

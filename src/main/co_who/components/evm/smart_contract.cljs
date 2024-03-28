@@ -153,8 +153,8 @@
                         :class "flex flex-col :col-start-2"}
                        (dom/h1 {:class "mb-2"} "Transactions")
                        (dom/div {:id :list
-                                 :class "dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 w-full
-                        dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 p-4 text-md rounded-lg overflow-hidden"}
+                                 :class "dark:bg-gray-700 dark:placeholder-gray-400 w-full dark:border-gray-600
+                                         dark:text-white dark:focus:ring-blue-500 p-4 text-md rounded-lg overflow-hidden"}
                                 (dom/div {:id :l2
                                           :class "position-relative overflow-y-auto overflow-x-hidden flex max-h-64"}
                                          (if transactions

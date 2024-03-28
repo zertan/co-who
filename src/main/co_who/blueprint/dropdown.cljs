@@ -5,7 +5,7 @@
   (dom/div {}
     (dom/button  {:id "dropdownInformationButton",
                   :data-dropdown-toggle "dropdownInformation",
-                  :class "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800",
+                  :class "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800",
                   :type "button"}
       (dom/span {} heading)
       #_(dom/svg
@@ -22,7 +22,7 @@
     :d "m1 1 4 4 4-4"})))
     (dom/div
         {:id "dropdownInformation",
-         :class "z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"}
+         :class "z-10 hidden bg-white divide-y divide-gray-100 rounded-sm shadow w-44 dark:bg-gray-700 dark:divide-gray-600"}
         #_(dom/div
             {:class "px-4 py-3 text-sm text-gray-900 dark:text-white"}
             (dom/div {} "Bonnie Green")
@@ -44,10 +44,11 @@
         title)
       (dom/select {:id "countries"
                    :on-change on-change
-                   :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
-                           focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+                   :class "bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500
+                           focus:border-blue-500 block w-full p-3 dark:bg-black dark:border-gray-600 dark:placeholder-gray-400
                            dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"}
                   (map-indexed (fn [i {:keys [value] :as item}]
-                                 (dom/option {:selected (= i 0)} value) ) items)
+                                 (dom/option {:class ""
+                                              :selected (= i 0)} value) ) items)
        ))
   )
